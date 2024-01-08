@@ -1,0 +1,16 @@
+{
+  "include": [
+    "src/**/*.ts"
+  ],
+  "compilerOptions": {
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "target": "es6",
+    "moduleResolution": "Node",
+    "sourceMap": true,
+    "outDir": "dist",
+  },
+  "lib": [
+    "es2020",
+  ]
+}

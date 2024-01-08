@@ -1,0 +1,8 @@
+:root {
+  --primary-blur-strength: 20px;
+
+  --toolbar-h: 32px;
+  
+  --titlebar-h: 42px;
+  --leftbar-w: 180px;
+}
