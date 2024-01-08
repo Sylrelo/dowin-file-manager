@@ -16,7 +16,7 @@ async function FileExists(path: string): Promise<boolean> {
 
 async function AvailableSpace(path: string): Promise<Record<string, number>> {
   try {
-    const sfs = await statfs("/");
+    const sfs = await statfs(path);
 
     return {
       bTotal: sfs.blocks * sfs.bsize,
