@@ -64,7 +64,7 @@ export async function ReadDir(entryPath: string): Promise<FsContent[]> {
       withFileTypes: true,
     });
   } catch (error) {
-    log.error("ReadDir [readdir]", error.code);
+    log.error("ReadDir [readdir]", error.code, entryPath);
     return [];
   }
 

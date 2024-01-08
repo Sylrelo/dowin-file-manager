@@ -3,6 +3,7 @@ import { AnonymousFunction } from "../types";
 import { access, statfs } from "fs/promises";
 import { ReadDir } from "../Services/read_dir";
 import { BOOKMARK_DB } from "../global";
+import { error } from "npmlog";
 
 async function FileExists(path: string): Promise<boolean> {
   try {
@@ -21,7 +22,8 @@ async function AvailableSpace(path: string): Promise<Record<string, number>> {
       bTotal: sfs.blocks * sfs.bsize,
       bFree: sfs.bfree * sfs.bsize,
     };
-  } catch (_) {
+  } catch (err) {
+    error("AvailableSpace", err.code, path);
     return {
       bTotal: 0,
       bFree: 0

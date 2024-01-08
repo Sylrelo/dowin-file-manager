@@ -1,11 +1,24 @@
-FROM rust
+FROM node:20-alpine3.19 as builder
 
-RUN cargo install cargo-watch
-RUN cargo install diesel_cli --no-default-features --features sqlite
-RUN rustup component add rustfmt
+WORKDIR /front
+COPY ./front /front
+RUN npm install
+RUN npm run build
 
-WORKDIR /app/back-rs
+WORKDIR /backend
+COPY ./backend /backend
+RUN npm install
+RUN npm run build
 
-ENV SHELL /bin/bash
-# ENTRYPOINT [ "sleep", "infinity" ]
-CMD [ "cargo", "watch", "-x", "'run'" ]
+FROM node:20-alpine3.19 as runner
+ENV NODE_ENV=production
+
+COPY --from=builder /front/dist /front/dist
+COPY --from=builder /backend /backend
+
+WORKDIR /backend/dist
+RUN npm install
+
+
+EXPOSE 3000
+CMD ["entry.js"]
