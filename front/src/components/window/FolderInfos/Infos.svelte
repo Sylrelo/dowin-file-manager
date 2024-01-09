@@ -3,7 +3,6 @@
   import { Http } from "../../../http";
   import type {
     DetailPerFolder,
-    Details,
     FolderInfos,
     FsContent,
   } from "../../../interfaces";
@@ -46,13 +45,15 @@
         currObj[p] = {
           _size: data.size,
           _count: data.count,
+          _folderCount: data.folderCount,
           _deep: i,
           _files: data.files,
         };
       } else {
         currObj = currObj[p];
         currObj._size += data.size;
-        currObj._count += data.count;
+        // currObj._count += data.count;
+        // currObj._folderCount += data.folderCount;
       }
     }
   }
@@ -162,6 +163,7 @@
           tree={{
             _size: data.totalSize,
             _count: data.totalFile,
+            _folderCount: data.totalDirectory,
           }}
           path={$path}
           totalSize={data.totalSize}

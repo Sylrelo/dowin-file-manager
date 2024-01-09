@@ -5,6 +5,7 @@ import { constants, stat } from "fs/promises";
 export interface DetailPerFolder {
   path: string
   count: number
+  folderCount: number
   size: number
   files: FsContent[];
 }
@@ -65,6 +66,8 @@ export async function ReadDirSize(entryPath: string, options: InfosOptions = {})
     const currentPath = paths.pop();
 
     const entries = await ReadDir(currentPath);
+    const folderCount = entries.filter(e => (e.fileType & constants.S_IFDIR) === constants.S_IFDIR).length;
+
 
     if (opts.detailled) {
       folderDetailId = detailPerFolder.findIndex(o => o.path === currentPath);
@@ -74,6 +77,7 @@ export async function ReadDirSize(entryPath: string, options: InfosOptions = {})
           path: currentPath,
           size: 0,
           count: 0,
+          folderCount,
           files: []
         });
         folderDetailId = detailPerFolder.length - 1;

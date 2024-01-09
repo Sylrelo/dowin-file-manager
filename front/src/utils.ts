@@ -6,24 +6,36 @@ export const sleep = (time: number): Promise<void> => {
     })
 }
 
-export const sizeFormatter = (size: number | undefined): string => {
-    if (size === 0 || size == null || isNaN(size)) {
-        return "--"
+export enum NumberFormatType {
+    Number,
+    Size
+}
+
+const numberPostfix = [
+    ["k", "m", "b", "t"],
+    ["K", "M", "G", "T"],
+]
+export function formatNumber(num: number | undefined, precision: number = 1, type: NumberFormatType = NumberFormatType.Number) {
+    if (num === 0 || num == null || isNaN(num)) {
+        return "-"
     }
 
-    let result = size.toString();
+    let result = num.toString();
 
     const div = (n: number, post: string) => {
-        if (size > n) result = `${(size / n).toFixed(2)} ${post}`;
+        if (num > n) result = `${(num / n).toFixed(precision)} ${post}`;
     };
 
-    result = `${size} B`;
-
-    div(1000, "KB");
-    div(1000000, "MB");
-    div(1000000000, "GB");
+    div(1000, numberPostfix[type][0]);
+    div(1000000, numberPostfix[type][1]);
+    div(1000000000, numberPostfix[type][2]);
+    div(1000000000000, numberPostfix[type][3]);
 
     return result;
+}
+
+export const sizeFormatter = (size: number | undefined): string => {
+    return formatNumber(size, 1, NumberFormatType.Size);
 };
 
 export const getNameBeforeLastSlash = (name: string): string => {

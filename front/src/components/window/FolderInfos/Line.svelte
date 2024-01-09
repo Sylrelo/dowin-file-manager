@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { sizeFormatter } from "../../../utils";
+  import { formatNumber, sizeFormatter } from "../../../utils";
   import TablerIcon from "../../Icons/TablerIcon.svelte";
   import { doesTreeContainSubfolder, getTreeSubfolders } from "./Utils";
 
@@ -42,8 +42,14 @@
       <div style:width={(tree._size / totalSize) * 100 + "px"}></div>
     </div>
     <div class="size">{sizeFormatter(tree._size)}</div>
-    <div>--</div>
-    <div>{tree._count ?? ""}</div>
+    <div class="d-flex count" style="gap: 3px; justify-content:end;">
+      {formatNumber(tree._folderCount)}
+      <TablerIcon icon="folder" />
+    </div>
+    <div class="d-flex count" style="gap: 3px">
+      <TablerIcon icon="file" />
+      {formatNumber(tree._count)}
+    </div>
   </button>
 
   {#if isExpanded}
@@ -93,16 +99,21 @@
 
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
 
-      > div {
-        text-align: center;
-        width: 5%;
+      // > div {
+      //   text-align: center;
+      //   width: 5%;
+      // }
+      > .count {
+        width: 60px;
       }
+
       > .size {
-        width: 80px;
+        width: 60px;
         text-align: left;
       }
+
       > .visual-size {
         position: relative;
         width: 90px;
@@ -122,6 +133,7 @@
           background-color: rgb(77, 77, 214);
         }
       }
+
       > .path {
         width: 50%;
         text-align: left;

@@ -29,22 +29,18 @@
   };
 
   onMount(() => {
-    openWindow();
-
-    const win = $windowsNew[0];
-    (win as ExplorerWindow).ctx.path.set("/Users/slopez/Downloads/test");
-
     // openWindow();
-
+    // const win = $windowsNew[0];
+    // (win as ExplorerWindow).ctx.path.set("/Users/slopez/Downloads");
+    // openWindow();
     // const win2 = $windowsNew[1];
     // (win2 as ExplorerWindow).ctx.path.set("/Users/slopez/Downloads/TO-NAS");
-
-    const uuid = uuidv4();
-    activeWindow.set(uuid);
-    windowsNew.update((old) => [
-      ...old,
-      new FolderInfosWindow(uuid, "/Users/slopez/Downloads/TO-NAS"),
-    ]);
+    // const uuid = uuidv4();
+    // activeWindow.set(uuid);
+    // windowsNew.update((old) => [
+    //   ...old,
+    //   new FolderInfosWindow(uuid, "/Users/slopez/Downloads/TO-NAS"),
+    // ]);
   });
 </script>
 
