@@ -18,18 +18,16 @@ export default fp(function (fastify, _options, done) {
       url.startsWith("/resources/") ||
       url.startsWith("assets/") ||
       url.startsWith("/assets/") ||
-      url.endsWith("/users/login")
+      url.endsWith("/login")
     ) {
       return;
     }
 
     const authHeader = request.headers?.authorization;
 
-
     if (authHeader == null) {
       response.code(401);
-      response.send({});
-      return;
+      return { message: "Missing header." };
     }
 
     const bearerToken = authHeader.slice(7);
@@ -37,22 +35,20 @@ export default fp(function (fastify, _options, done) {
 
     if (session == null) {
       response.code(401);
-      response.send({});
-      return;
+      return { message: "Invalid session." };
     }
 
     const user = await USER_DB.getOne(session.userUuid);
     if (user == null) {
       response.code(401);
-      response.send({});
-      return;
+      return { message: "Invalid user." };
     }
 
     request.userUuid = session.userUuid;
     request.userRole = user.role;
 
 
-    return;
+    return {};
   });
 
   done();

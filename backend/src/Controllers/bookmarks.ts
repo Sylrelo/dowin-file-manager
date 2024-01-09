@@ -69,11 +69,11 @@ export default function (
 
   fastify.get("/", async function (_req, _res) {
     const isRunningInsideDocker = await FileExists("/.dockerenv");
-    let bookmarks: Bookmark[] = [];
+    const bookmarks: Bookmark[] = [];
 
     const availableSpace = await AvailableSpace("/");
     bookmarks.push({
-      uuid: "--",
+      uuid: "/",
       name: "/",
       path: "/",
       type: BookmarkType.Mount,
@@ -82,7 +82,7 @@ export default function (
 
     if (isRunningInsideDocker) {
       const dirs = await ReadDir("/manager");
-      bookmarks = await Promise.all(
+      const folders = await Promise.all(
         dirs.map(
           async e => ({
             uuid: "--",
@@ -93,6 +93,7 @@ export default function (
           })
         )
       );
+      bookmarks.push(...folders);
     }
 
     bookmarks.push(... await BOOKMARK_DB.getAll());
