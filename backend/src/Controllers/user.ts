@@ -10,9 +10,13 @@ export default function (
   done: AnonymousFunction
 ) {
 
+  /* ----------------------------------- ME ----------------------------------- */
+
   fastify.get("/me", async function (request: Request, _response) {
     return { uuid: request.userUuid };
   });
+
+  /* --------------------------------- GET ONE -------------------------------- */
 
   fastify.get("/:uuid", async function (request: Request, response) {
     if (request.userRole !== "ADMIN") {
@@ -23,6 +27,7 @@ export default function (
     return await USER_DB.getOne(request.params["uuid"]);
   });
 
+  /* ------------------------------- DELETE ONE ------------------------------- */
 
   fastify.put("/:uuid", async function (request: Request, response) {
     if (request.userRole !== "ADMIN") {
@@ -33,7 +38,7 @@ export default function (
     return await USER_DB.updateOne(request.params["uuid"], request.body);
   });
 
-
+  /* --------------------------------- GET ONE -------------------------------- */
 
   fastify.get("/", async function (request: Request, response) {
 
@@ -44,6 +49,8 @@ export default function (
 
     return await USER_DB.getAll();
   });
+
+  /* ---------------------------------- POST ---------------------------------- */
 
   fastify.post("/", async function (request: Request, response) {
     if (request.userRole !== "ADMIN") {
@@ -58,6 +65,8 @@ export default function (
     return createdUser;
   });
 
+  /* --------------------------------- DELETE --------------------------------- */
+
   fastify.delete("/:uuid", async function (request: Request, response) {
     if (request.userRole !== "ADMIN") {
       response.code(403);
@@ -68,6 +77,7 @@ export default function (
     return {};
   });
 
+  /* ---------------------------------- LOGIN --------------------------------- */
 
   fastify.post("/login", async function (request, response) {
 

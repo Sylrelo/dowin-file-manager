@@ -42,7 +42,6 @@
 
         const postData = { ...data };
         postData.passwordConfirmation = undefined;
-        // postData.role = postData.role;
 
         if (uuid) {
           await Http.put("users", uuid, postData);
@@ -59,8 +58,6 @@
   });
 </script>
 
-<!-- const win: SettingsWindow = getContext("win"); const func: UserFn = win.func;
-const {selected} = win.context; -->
 <form>
   <div>
     <label for="username">Username</label>

@@ -3,8 +3,8 @@
   import { Http } from "../http";
   import { currentUser } from "../stores/global";
 
-  let username: string = "ADMIN";
-  let password: string = "ADMIN";
+  let username: string = "";
+  let password: string = "";
 
   let isBusy: boolean = false;
 

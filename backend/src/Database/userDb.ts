@@ -2,14 +2,12 @@ import { JsonDb } from "./database";
 import crypto from "crypto";
 import argon2 from "argon2";
 
-
 export interface User {
   uuid: string
   role: string
   username: string
   password: string
 }
-
 
 export class UserDb extends JsonDb<{ [key: string]: User }> {
   constructor() {
