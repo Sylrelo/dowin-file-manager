@@ -1,11 +1,12 @@
 import path from "path";
-import { ReadDir } from "./read_dir";
+import { FsContent, ReadDir } from "./read_dir";
 import { constants, stat } from "fs/promises";
 
-interface DetailPerFolder {
+export interface DetailPerFolder {
   path: string
   count: number
   size: number
+  files: FsContent[];
 }
 
 interface Details {
@@ -72,7 +73,8 @@ export async function ReadDirSize(entryPath: string, options: InfosOptions = {})
         detailPerFolder.push({
           path: currentPath,
           size: 0,
-          count: 0
+          count: 0,
+          files: []
         });
         folderDetailId = detailPerFolder.length - 1;
       }
@@ -106,6 +108,7 @@ export async function ReadDirSize(entryPath: string, options: InfosOptions = {})
           // }
           detailPerFolder[folderDetailId].size += entry.metadata?.size ?? 0;
           detailPerFolder[folderDetailId].count += 1;
+          detailPerFolder[folderDetailId].files.push(entry);
         }
       }
     }
