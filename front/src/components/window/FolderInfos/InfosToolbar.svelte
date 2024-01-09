@@ -25,11 +25,11 @@
       </div>
       <div class="info">
         <div class="label">Directories</div>
-        <div class="value">{$data.totalDirectory}</div>
+        <div class="value">{$data.totalDirectory ?? "-"}</div>
       </div>
       <div class="info">
         <div class="label">Files</div>
-        <div class="value">{$data.totalFile}</div>
+        <div class="value">{$data.totalFile ?? "-"}</div>
       </div>
     </div>
   </div>

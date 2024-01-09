@@ -27,30 +27,16 @@
 
     windowsNew.update((old) => [...old, new SettingsWindow(uuid)]);
   };
-
-  onMount(() => {
-    // openWindow();
-    // const win = $windowsNew[0];
-    // (win as ExplorerWindow).ctx.path.set("/Users/slopez/Downloads");
-    // openWindow();
-    // const win2 = $windowsNew[1];
-    // (win2 as ExplorerWindow).ctx.path.set("/Users/slopez/Downloads/TO-NAS");
-    // const uuid = uuidv4();
-    // activeWindow.set(uuid);
-    // windowsNew.update((old) => [
-    //   ...old,
-    //   new FolderInfosWindow(uuid, "/Users/slopez/Downloads/TO-NAS"),
-    // ]);
-  });
 </script>
 
 <div class="win-list">
   <button class="btn" on:click={() => openWindow()}>
     <TablerIcon icon="plus" />
+    <span>New Window</span>
   </button>
-  <button class="btn" on:click={() => openSetting()}>
+  <!-- <button class="btn" on:click={() => openSetting()}>
     <TablerIcon icon="adjustments" />
-  </button>
+  </button> -->
 
   {#each $windowsNew as window (window.uuid)}
     <button
@@ -98,6 +84,14 @@
       padding: 4px 4px;
       border-radius: 5px;
       font-size: 1.1rem;
+
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      > span {
+        font-size: 12px;
+      }
 
       &:hover {
         background-color: var(--main-color-5);
