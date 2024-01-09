@@ -41,11 +41,10 @@
 
     const uuid = uuidv4();
     activeWindow.set(uuid);
-    windowsNew.update((old) => [...old, new FolderInfosWindow(uuid)]);
-
-    const win2 = $windowsNew[1];
-    (win2 as FolderInfosWindow).ctx.path.set("/Users/slopez/Downloads/TO-NAS");
-    // openSetting();
+    windowsNew.update((old) => [
+      ...old,
+      new FolderInfosWindow(uuid, "/Users/slopez/Downloads/TO-NAS"),
+    ]);
   });
 </script>
 
@@ -70,8 +69,14 @@
 
       {#key $windowListTitleRefresh}
         <div class="name">
-          {getLastPath(get(window?.ctx?.path)) ??
-            get(window.reactiveData).title}
+          {#if window instanceof FolderInfosWindow}
+            {get(window.reactiveData).title}: {getLastPath(
+              get(window?.ctx?.path)
+            )}
+          {:else}
+            {getLastPath(get(window?.ctx?.path)) ??
+              get(window.reactiveData).title}
+          {/if}
         </div>
       {/key}
     </button>

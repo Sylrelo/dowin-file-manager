@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { v4 as uuidv4 } from "uuid";
   import { slide } from "svelte/transition";
   import TablerIcon from "../components/Icons/TablerIcon.svelte";
   import { mouseButtonEvent } from "../events/MouseButton";
@@ -6,11 +7,14 @@
   import { Http } from "../http";
   import type { Bookmark } from "../interfaces";
   import {
+    activeWindow,
     bookmarks,
     explorerWindowRefresh,
     selectedForRename,
+    windowsNew,
   } from "../stores/global";
   import { Vec2 } from "../utilities/Vec2";
+  import { FolderInfosWindow } from "../components/window/FolderInfos/FolderInfos";
 
   let containerElement: HTMLElement;
 
@@ -104,6 +108,25 @@
       isOpen = false;
     } catch (_) {}
   }
+
+  function openFolderInfos(): void {
+    if (fileTarget?.path == null) {
+      return;
+    }
+
+    const uuid = uuidv4();
+    activeWindow.set(uuid);
+
+    windowsNew.update((old) => [
+      ...old,
+      new FolderInfosWindow(uuid, fileTarget!.path!),
+    ]);
+
+    isOpen = false;
+
+    // const win2 = $windowsNew[1];
+    // (win2 as FolderInfosWindow).ctx.path.set("/Users/slopez/Downloads/TO-NAS");
+  }
 </script>
 
 {#if isOpen}
@@ -119,6 +142,10 @@
     </div>
 
     {#if fileTarget?.type === "Directory"}
+      <button class="btn" on:click={() => openFolderInfos()}>
+        <TablerIcon icon="chart-pie" />
+        Dir stats
+      </button>
       <button class="btn" on:click={() => pin()}>
         <TablerIcon icon="pin" />
         Pin to leftbar

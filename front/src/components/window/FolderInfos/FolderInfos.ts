@@ -1,26 +1,24 @@
 
 import { writable, type Writable } from "svelte/store";
 import { Window } from "../Window"
+import type { FolderInfos } from "../../../interfaces";
 
 interface FolderInfosCtx {
-  path: Writable<string>
+  path: Writable<string>,
+  data: Writable<FolderInfos>
 }
-
-// export interface UserFn {
-//   del: (uuid: string) => Promise<void>,
-//   add: () => Promise<void>
-// }
 
 export class FolderInfosWindow extends Window {
   ctx: FolderInfosCtx;
 
-  constructor(uuid: string) {
-    super(uuid, "FolderInfos/Infos", "");
-    this.ticon = "unknown"
+  constructor(uuid: string, path: string) {
+    super(uuid, "FolderInfos/Infos", "FolderInfos/InfosToolbar");
+    this.ticon = "chart-pie"
 
-    this.title = "FolderInfos";
+    this.title = "Folder Size";
     this.ctx = {
-      path: writable("/users"),
+      path: writable(path),
+      data: writable({} as FolderInfos)
     };
   }
 

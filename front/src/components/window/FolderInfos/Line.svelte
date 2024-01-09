@@ -11,7 +11,7 @@
   export let deep: number = 0;
   export let totalSize: number = 0;
 
-  let isExpanded = deep < 1;
+  let isExpanded = deep < 2;
 </script>
 
 <div class="container">

@@ -14,7 +14,7 @@
 
   export let win: FolderInfosWindow;
 
-  const { path } = win.ctx;
+  const { path, data: dataCtx } = win.ctx;
 
   let data: FolderInfos;
   let isLoading = true;
@@ -85,6 +85,7 @@
     try {
       isLoading = true;
       data = await Http.get(`fs/infos?dir=${$path}&detailled`);
+      dataCtx.set(data);
 
       /* ----------------------- GENERATE DATA FOR PIE-CHART ---------------------- */
 
@@ -155,25 +156,19 @@
   {#if isLoading}
     Loading...
   {:else}
-    <div class="infos-container">
-      <div class="info">
-        <div class="label">Size</div>
-        <div class="value">{sizeFormatter(data.totalSize)}</div>
-      </div>
-      <div class="info">
-        <div class="label">Directories</div>
-        <div class="value">{data.totalDirectory}</div>
-      </div>
-      <div class="info">
-        <div class="label">Files</div>
-        <div class="value">{data.totalFile}</div>
-      </div>
-    </div>
-
     <div class="container">
       <div class="per-folder">
+        <Line
+          tree={{
+            _size: data.totalSize,
+            _count: data.totalFile,
+          }}
+          path={$path}
+          totalSize={data.totalSize}
+        />
+
         {#each getTreeSubfolders(tree) as path}
-          <Line tree={tree[path]} {path} totalSize={data.totalSize} />
+          <Line tree={tree[path]} {path} totalSize={data.totalSize} deep={1} />
         {/each}
       </div>
       <div class="per-ext">
@@ -185,9 +180,6 @@
                   <td
                     style="--start: {p._start}; --end: {p._end}; --color: #{p._color} "
                   >
-                    <!-- {#if p.size / data.totalSize > 0.2}
-                      <span class="data">{p.ext}</span>
-                    {/if} -->
                   </td>
                 </tr>
               {/each}
@@ -216,13 +208,18 @@
 
 <style lang="scss">
   .container {
+    position: absolute;
+
     display: flex;
+
     gap: 4px;
     overflow: hidden;
-    height: 400px;
+    height: calc(100% - var(--titlebar-h) - 4px - 8px);
+    width: calc(100% - 8px - 8px);
 
     .per-ext {
-      width: 300px;
+      width: 200px;
+      overflow: auto;
     }
 
     .per-folder {
@@ -263,34 +260,8 @@
         height: 14px;
 
         &.hide {
-          background-color: transparent !important;
+          background-color: #00000044 !important;
         }
-      }
-    }
-  }
-
-  .infos-container {
-    display: flex;
-    gap: 12px;
-
-    .info {
-      display: flex;
-      gap: 4px;
-      padding: 4px 8px;
-      border-radius: 3px;
-      background-color: var(--main-color-10);
-      font-size: 14px;
-
-      .label {
-        font-weight: bold;
-        text-align: left;
-        min-width: 100px;
-      }
-
-      .value {
-        background-color: var(--main-color-1);
-        padding: 0px 8px;
-        border-radius: inherit;
       }
     }
   }
