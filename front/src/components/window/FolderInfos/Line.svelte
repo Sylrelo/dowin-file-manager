@@ -24,7 +24,7 @@
       isExpanded = !isExpanded;
     }}
   >
-    <div class="path" style:left={deep * 8 + "px"}>
+    <div class="path" style:left={deep * 4 + "px"}>
       <div>
         {#if isFile}
           <TablerIcon icon="file" />
@@ -33,12 +33,12 @@
         {/if}
       </div>
 
-      <span style:width={`calc(100% - ${deep * 16}px)`}>
+      <span style:width={`calc(100% - ${deep * 10}px)`}>
         {path}
       </span>
     </div>
     <div class="visual-size">
-      <span>{Math.round((tree._size / totalSize) * 100)} %</span>
+      <span>{((tree._size / totalSize) * 100).toFixed(1)} %</span>
       <div style:width={(tree._size / totalSize) * 100 + "px"}></div>
     </div>
     <div class="size">{sizeFormatter(tree._size)}</div>

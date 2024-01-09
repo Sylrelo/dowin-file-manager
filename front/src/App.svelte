@@ -16,6 +16,7 @@
   import WindowsList from "./components/WindowsList.svelte";
   import BlankWindow from "./components/window/generic-window/BlankWindow.svelte";
   import FileRightClick from "./listeners/FileRightClick.svelte";
+  import { hexToRgb, rgbToHex } from "./utils";
 
   onMount(() => {
     keyEvent.init();
@@ -68,12 +69,12 @@
     for (let i = 20; i >= 5; i--) {
       doc.setProperty(
         `--main-color-${20 - i}`,
-        "#" + darkenColor(color, i / 20),
+        "#" + darkenColor(color, i / 20)
       );
 
       doc.setProperty(
         `--main-color-alpha-${20 - i}`,
-        "#" + darkenColor(color, i / 20) + "aa",
+        "#" + darkenColor(color, i / 20) + "aa"
       );
     }
   });
@@ -84,25 +85,6 @@
     window.removeEventListener("keydown", onKeyDown);
     window.removeEventListener("keyup", onKeyUp);
   });
-
-  const hexToRgb = (hex: string): number[] => {
-    const r = parseInt(hex.slice(0, 2), 16);
-    const g = parseInt(hex.slice(2, 4), 16);
-    const b = parseInt(hex.slice(4, 6), 16);
-
-    return [r, g, b];
-  };
-
-  function componentToHex(c: number) {
-    var hex = c.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
-  }
-
-  function rgbToHex(rgb: number[]) {
-    return (
-      componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2])
-    );
-  }
 
   const darkenColor = (hex: string, value: number): string => {
     let rgb = hexToRgb(hex);

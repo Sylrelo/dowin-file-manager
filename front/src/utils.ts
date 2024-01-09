@@ -37,3 +37,24 @@ export const getNameBeforeLastSlash = (name: string): string => {
 
     return name;
 }
+
+export const hexToRgb = (hex: string): number[] => {
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+
+    return [r, g, b];
+};
+
+export function componentToHex(c: number) {
+    var hex = Math.round(c).toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+export function rgbToHex(rgb: number[]) {
+
+
+    return (
+        componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2])
+    );
+}

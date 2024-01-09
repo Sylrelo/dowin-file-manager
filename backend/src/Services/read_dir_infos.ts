@@ -9,7 +9,7 @@ export interface DetailPerFolder {
   files: FsContent[];
 }
 
-interface Details {
+export interface Details {
   [key: string]: {
     count: number
     size: number
