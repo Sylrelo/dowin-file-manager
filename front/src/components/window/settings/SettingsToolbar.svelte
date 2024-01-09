@@ -44,7 +44,7 @@
     </div>
   {/if}
 
-  {#if currentPath == "/users/add" || currentPath == "/mounts/add"}
+  {#if currentPath == "/users/add" || currentPath == "/users/edit" || currentPath == "/mounts/add"}
     <div transition:fade={{ duration: 100 }}>
       <div style="margin-left: auto;">
         <ToolbarButton

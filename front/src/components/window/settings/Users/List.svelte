@@ -9,7 +9,7 @@
   const win: SettingsWindow = getContext("win");
 
   // const func: UserFn = $win.func;
-  const { selected, isBusy } = win.context;
+  const { selected, isBusy, path, params } = win.context;
 
   /* -------------------------------------------------------------------------- */
 
@@ -87,6 +87,18 @@
               <div>todo: optionnal email</div>
             </div> -->
           <!-- </div> -->
+          <div>
+            <button
+              type="button"
+              on:click={() => {
+                //TODO: regex-based routing
+                params.set({
+                  uuid: user.uuid,
+                });
+                path.set("/users/edit");
+              }}>Edit</button
+            >
+          </div>
           <div style="width: 20px; ">
             <input type="checkbox" bind:group={$selected} value={user.uuid} />
           </div>

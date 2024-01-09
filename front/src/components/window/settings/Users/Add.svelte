@@ -2,39 +2,53 @@
   import { getContext, onMount } from "svelte";
   import { Http } from "../../../../http";
   import type { SettingsWindow } from "../SettingWindow";
+  import { get } from "svelte/store";
 
   const win: SettingsWindow = getContext("win");
-  const { isBusy } = win.context;
+  const { isBusy, params } = win.context;
 
   let data: Record<string, any> = {
-    username: "",
-    fullname: "",
-    password: "",
-    passwordConfirmation: "",
-    role: "2",
+    username: undefined,
+    fullname: undefined,
+    password: undefined,
+    passwordConfirmation: undefined,
+    role: "USER",
   };
 
   /* -------------------------------------------------------------------------- */
 
-  onMount(() => {
+  onMount(async () => {
+    const uuid = get(params)?.["uuid"];
+
+    if (uuid) {
+      const result = await Http.get("users/" + uuid);
+
+      data.username = result.username;
+      data.role = result.role;
+    }
+
     win.setFn("add", async function () {
       try {
         if (
           !data.username ||
-          !data.password ||
-          !data.passwordConfirmation ||
+          (!uuid && (!data.password || !data.passwordConfirmation)) ||
           !data.role
         ) {
           console.debug("Empty payload");
           return;
         }
+
         isBusy.set(true);
 
         const postData = { ...data };
         postData.passwordConfirmation = undefined;
-        postData.role = +postData.role;
+        // postData.role = postData.role;
 
-        await Http.post("users", postData);
+        if (uuid) {
+          await Http.put("users", uuid, postData);
+        } else {
+          await Http.post("users", postData);
+        }
         win.context.path.set("/users");
       } catch (err: any) {
         console.error(err);

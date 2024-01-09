@@ -77,6 +77,11 @@ export class Http {
         return await response.text();
     }
 
+
+    static put = async (endpoint: string, id: string, data: any): Promise<any> => {
+        return this.make("put", endpoint + "/" + id, data);
+    }
+
     static post = async (endpoint: string, data: any): Promise<any> => {
         return this.make("post", endpoint, data);
     }

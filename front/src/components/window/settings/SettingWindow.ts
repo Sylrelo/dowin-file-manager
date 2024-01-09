@@ -6,6 +6,7 @@ interface SettingsWindowCtx {
   selected: Writable<string[]>
   func: Writable<any>
   isBusy: Writable<boolean>
+  params: Writable<Record<string, any>>
 }
 
 export interface UserFn {
@@ -25,7 +26,8 @@ export class SettingsWindow extends Window {
       path: writable("/users"),
       selected: writable([]),
       func: writable({}),
-      isBusy: writable(false)
+      isBusy: writable(false),
+      params: writable({})
     };
   }
 
@@ -43,7 +45,8 @@ export class SettingsWindow extends Window {
       path: this.context.path,
       selected: this.context.selected,
       func: this.context.func,
-      isBusy: this.context.isBusy
+      isBusy: this.context.isBusy,
+      params: this.context.params
     }
 
     this.context.isBusy.set(false)

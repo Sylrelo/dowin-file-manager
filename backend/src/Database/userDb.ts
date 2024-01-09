@@ -41,9 +41,43 @@ export class UserDb extends JsonDb<{ [key: string]: User }> {
     }
   }
 
+  async updateOne(uuid: string, data: Partial<User>): Promise<User | null> {
+    if (this.isJsonDatabase) {
+      let user = this.data?.[uuid];
+
+      if (user == null) {
+        return null;
+      }
+
+      data = Object.fromEntries(
+        Object.entries(data).filter((([_, value]) => value != undefined))
+      );
+
+      if (data.password) {
+        data.password = await argon2.hash(data.password, {
+          timeCost: 10,
+          hashLength: 128,
+        });
+      }
+
+      user = {
+        ...user,
+        ...data
+      };
+
+      this.data[uuid] = user;
+
+      this.saveJsonDb();
+      return user;
+    }
+  }
+
   async getAll(): Promise<User[]> {
     if (this.isJsonDatabase) {
-      return Object.values(this.data);
+      return Object.values(this.data).map(u => {
+        delete u.password;
+        return u;
+      });
     }
   }
 

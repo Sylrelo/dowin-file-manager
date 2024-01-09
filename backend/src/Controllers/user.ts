@@ -14,6 +14,27 @@ export default function (
     return { uuid: request.userUuid };
   });
 
+  fastify.get("/:uuid", async function (request: Request, response) {
+    if (request.userRole !== "ADMIN") {
+      response.code(403);
+      return {};
+    }
+
+    return await USER_DB.getOne(request.params["uuid"]);
+  });
+
+
+  fastify.put("/:uuid", async function (request: Request, response) {
+    if (request.userRole !== "ADMIN") {
+      response.code(403);
+      return {};
+    }
+
+    return await USER_DB.updateOne(request.params["uuid"], request.body);
+  });
+
+
+
   fastify.get("/", async function (request: Request, response) {
 
     if (request.userRole !== "ADMIN") {

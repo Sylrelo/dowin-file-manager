@@ -19,6 +19,7 @@
   const ROUTES: { [key: string]: Record<string, any> } = {
     "/users": { component: "./Settings/Users/List", title: "Users" },
     "/users/add": { component: "./Settings/Users/Add", title: "New User" },
+    "/users/edit": { component: "./Settings/Users/Add", title: "Edit User" },
 
     "/mounts": { component: "./Settings/Mounts/List", title: "Mounts" },
     "/mounts/add": { component: "./Settings/Mounts/Add", title: "New Mount" },
