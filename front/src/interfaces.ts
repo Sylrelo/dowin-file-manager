@@ -7,6 +7,7 @@ type Modify<T, R> = Omit<T, keyof R> & R;
 
 export interface FsContent extends Modify<FsContentBack, {
   fileType: Filetype
+  ext?: string,
 }> {
 }
 

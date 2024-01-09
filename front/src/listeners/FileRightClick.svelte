@@ -89,7 +89,7 @@
       }
 
       const filename = fileTarget.path.slice(
-        fileTarget.path.lastIndexOf("/") + 1,
+        fileTarget.path.lastIndexOf("/") + 1
       );
 
       const result: Bookmark = await Http.post("bookmarks", {
@@ -170,13 +170,14 @@
     font-size: 14px;
 
     background-color: var(--main-color-0);
-    box-shadow: #00000055 2px 2px 10px 0px;
+    // background-color: #444;
+    // box-shadow: #444 0px 0px 30px 0px;
 
     padding: 4px;
     gap: 0px;
 
-    border-radius: 2px;
-    border: 1px solid #666;
+    border-radius: 6px;
+    border: 3px solid #444;
 
     width: 200px;
 

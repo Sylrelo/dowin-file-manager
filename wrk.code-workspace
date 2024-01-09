@@ -1,10 +1,10 @@
 {
 	"folders": [
 		{
-			"path": "back-rs"
+			"path": "front"
 		},
 		{
-			"path": "front"
+			"path": "backend"
 		}
 	],
 	"settings": {}
