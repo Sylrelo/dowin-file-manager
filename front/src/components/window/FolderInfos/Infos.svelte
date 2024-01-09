@@ -104,7 +104,9 @@
       perExt.sort((a, b) => b.size - a.size);
 
       const len = perExt.length;
-      const lenSup = perExt.filter((e) => e.size / data.totalSize > 0.1).length;
+      const lenSup = perExt.filter(
+        (e) => e.size / data.totalSize > 0.02
+      ).length;
 
       for (let i = 0; i < len; i++) {
         const p = perExt[i];
@@ -125,11 +127,9 @@
         perExt[i]._end = end;
         perExt[i]._start = start;
 
-        perExt[i]._color = rgbToHex([
-          230 * (i / lenSup),
-          200 * (i / lenSup),
-          255,
-        ]);
+        const ratio = 1.0 - Math.min(1.0, i / lenSup);
+
+        perExt[i]._color = rgbToHex([230 * ratio, 200 * ratio, 200]);
       }
 
       /* ------------------------- GENERATE DATA FOR TREE ------------------------- */
@@ -194,7 +194,6 @@
             <div>
               <div
                 class="color"
-                class:hide={ext.size / data.totalSize < 0.1}
                 style:background-color={"#" + ext._color}
               ></div>
 

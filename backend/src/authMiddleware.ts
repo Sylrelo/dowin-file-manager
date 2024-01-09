@@ -1,14 +1,16 @@
 import fp from "fastify-plugin";
 import { Request } from "./types";
-import { SESSIONS } from "./global";
+import { SESSIONS, USER_DB } from "./global";
 
 export default fp(function (fastify, _options, done) {
   fastify.decorateRequest("userUuid", "");
+  fastify.decorateRequest("userRole", "");
+  // fastify.decorateRequest("userSession", {});
 
   fastify.addHook("onRequest", async function (request: Request, response) {
 
     //TODO: REMOVE DEBUG
-    return;
+    // return;
 
 
     if (request.url.endsWith("users/login")) {
@@ -32,7 +34,16 @@ export default fp(function (fastify, _options, done) {
       return;
     }
 
+    const user = await USER_DB.getOne(session.userUuid);
+    if (user == null) {
+      response.code(401);
+      response.send({});
+      return;
+    }
+
     request.userUuid = session.userUuid;
+    request.userRole = user.role;
+
 
     return;
   });

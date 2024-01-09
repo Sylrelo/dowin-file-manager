@@ -7,12 +7,18 @@ export const FS_PROGRESS = new FsProgress();
 export const USER_DB = new UserDb();
 export const BOOKMARK_DB = new BookmarkDb();
 
-export const SESSIONS: { [key: string]: any } = {};
+
+export interface UserSession {
+  userUuid: string
+  // role: string
+}
+
+export const SESSIONS: { [key: string]: UserSession } = {};
 
 setTimeout(async () => {
   if (USER_DB.count !== 0) return;
 
-  await USER_DB.create("ADMIN", "ADMIN");
+  await USER_DB.create("ADMIN", "ADMIN", "ADMIN");
 }, 2000);
 
 

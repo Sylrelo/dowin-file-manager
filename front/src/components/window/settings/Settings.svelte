@@ -50,14 +50,14 @@
 <div>
   <GenericLeftbar>
     <!-- <div class="leftbar-separator" /> -->
-    <LeftbarItem
+    <!-- <LeftbarItem
       label="Theme"
       ticon="palette"
       active={$path == "/theme"}
       on:click={() => path.set("/theme")}
     />
 
-    <div class="leftbar-separator" />
+    <div class="leftbar-separator" /> -->
 
     <LeftbarItem
       label="Users"
@@ -66,7 +66,7 @@
       on:click={() => path.set("/users")}
     />
 
-    <LeftbarItem
+    <!-- <LeftbarItem
       label="Groups"
       ticon="lock"
       active={$path.startsWith("/groups")}
@@ -78,7 +78,7 @@
       ticon="server-2"
       active={$path.startsWith("/mounts")}
       on:click={() => path.set("/mounts")}
-    />
+    /> -->
 
     <div class="leftbar-separator" />
   </GenericLeftbar>

@@ -3,7 +3,7 @@ import crypto from "crypto";
 import argon2 from "argon2";
 
 
-interface User {
+export interface User {
   uuid: string
   role: string
   username: string
@@ -35,7 +35,26 @@ export class UserDb extends JsonDb<{ [key: string]: User }> {
     return Object.keys(this.data).length;
   }
 
-  async create(username: string, password: string) {
+  async getOne(uuid: string): Promise<User | null> {
+    if (this.isJsonDatabase) {
+      return this.data[uuid] ?? null;
+    }
+  }
+
+  async getAll(): Promise<User[]> {
+    if (this.isJsonDatabase) {
+      return Object.values(this.data);
+    }
+  }
+
+  async delete(uuid: string) {
+    if (this.isJsonDatabase) {
+      delete this.data[uuid];
+      this.saveJsonDb();
+    }
+  }
+
+  async create(username: string, password: string, role: string) {
     if (this.isJsonDatabase) {
       for (const key in this.data) {
         if (this.data[key].username === username) {
@@ -48,7 +67,7 @@ export class UserDb extends JsonDb<{ [key: string]: User }> {
 
       this.data[uuid] = {
         uuid,
-        role: "",
+        role,
         username,
         password: await argon2.hash(password, {
           timeCost: 10,

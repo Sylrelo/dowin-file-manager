@@ -2,9 +2,9 @@
   import { getContext, onMount } from "svelte";
   import { Http } from "../../../../http";
 
-  import type { UsersDto } from "@backend/bindings/UsersDto";
   import TablerIcon from "../../../Icons/TablerIcon.svelte";
   import type { SettingsWindow } from "../SettingWindow";
+  import type { User } from "../../../../interfaces";
 
   const win: SettingsWindow = getContext("win");
 
@@ -13,7 +13,7 @@
 
   /* -------------------------------------------------------------------------- */
 
-  let users: UsersDto[] = [];
+  let users: User[] = [];
 
   /* -------------------------------------------------------------------------- */
 
@@ -60,7 +60,7 @@
       </div>
     </div> -->
 
-    {#each users as user (user.id)}
+    {#each users as user (user.uuid)}
       <div class="user-container">
         <div class="user">
           <div style="width: 50%; ">
@@ -77,26 +77,26 @@
               {user.username}
             </div>
           </div>
-          <div class="more-infos" style="width: 40%;">
-            <div>
+          <!-- <div class="more-infos" style="width: 40%;"> -->
+          <!-- <div>
               <div><TablerIcon icon="user" /></div>
               <div>{user.fullname ?? "--"}</div>
             </div>
             <div>
               <div><TablerIcon icon="mail" /></div>
               <div>todo: optionnal email</div>
-            </div>
-          </div>
+            </div> -->
+          <!-- </div> -->
           <div style="width: 20px; ">
-            <input type="checkbox" bind:group={$selected} value={user.id} />
+            <input type="checkbox" bind:group={$selected} value={user.uuid} />
           </div>
         </div>
-        <div class="groups">
+        <!-- <div class="groups">
           <div>group</div>
           <div>are</div>
           <div>coming</div>
           <div>soon</div>
-        </div>
+        </div> -->
       </div>
     {/each}
   </div>

@@ -22,7 +22,7 @@
   font-weight: 400;
 
   color-scheme: dark;
-  
+
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
@@ -38,28 +38,31 @@
   --main-color-40: #1a1d27;
   --main-color-60: #12131a;
 
+  /* background-size: contain; */
+  /* background-size: 14px 14px; */
+  background-color: rgb(60, 60, 60);
 
+  /* background: linear-gradient(
+    135deg,
+    rgba(63, 63, 63, 1),
+    #242424,
+    rgba(36, 36, 36, 1)
+  ); */
 
-
-
-  background-image: url("https://4kwallpapers.com/images/walls/thumbs_3t/1432.jpg");
-  /* background-image: url("https://i.redd.it/n1cu742mw3g31.png"); */
-  /* background-image: url("https://i.pinimg.com/originals/f6/08/db/f608dbb1fa4e1b2edc7a9fda42a9eff5.gif"); */
-  background-size: cover;
   background-position: center center;
+
   width: 100vw;
   height: 100vh;
 }
 
 * {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 *::-webkit-scrollbar {
   display: none;
 }
-
 
 a {
   font-weight: 500;
@@ -76,7 +79,6 @@ body {
   display: flex;
   place-items: center;
   overflow: hidden;
-
 }
 
 h1 {
@@ -99,7 +101,6 @@ button {
   border: none;
   background: none;
 }
-
 
 /* @media (prefers-color-scheme: light) {
   :root {

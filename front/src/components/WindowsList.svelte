@@ -34,9 +34,9 @@
     <TablerIcon icon="plus" />
     <span>New Window</span>
   </button>
-  <!-- <button class="btn" on:click={() => openSetting()}>
+  <button class="btn" on:click={() => openSetting()}>
     <TablerIcon icon="adjustments" />
-  </button> -->
+  </button>
 
   {#each $windowsNew as window (window.uuid)}
     <button

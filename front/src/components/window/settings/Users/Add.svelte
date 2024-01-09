@@ -57,7 +57,7 @@ const {selected} = win.context; -->
       autocomplete="username"
     />
   </div>
-  <div>
+  <!-- <div>
     <label for="fullname">Fullname</label>
     <input
       id="fullname"
@@ -65,7 +65,7 @@ const {selected} = win.context; -->
       bind:value={data.fullname}
       autocomplete="given-name"
     />
-  </div>
+  </div> -->
 
   <div>
     <label for="password">Password</label>
@@ -89,8 +89,8 @@ const {selected} = win.context; -->
   <div>
     <label for="role-select">Role</label>
     <select id="role-select" bind:value={data.role}>
-      <option value="1">Admin</option>
-      <option value="2">User</option>
+      <option value="ADMIN">Admin</option>
+      <option value="USER">User</option>
     </select>
   </div>
 </form>

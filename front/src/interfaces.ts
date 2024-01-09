@@ -1,6 +1,7 @@
 import type { FsContent as FsContentBack } from "@backend/src/Services/read_dir";
 import type { Bookmark, BookmarkType } from "@backend/src/Controllers/bookmarks";
 import type { FolderInfos, DetailPerFolder, Details } from "@backend/src/Services/read_dir_infos";
+import type { User } from "@backend/src/Database/userDb";
 
 import type { Filetype } from "./utilities/Filetype";
 
@@ -13,4 +14,9 @@ export interface FsContent extends Modify<FsContentBack, {
 }
 
 
-export type { FsContentBack, Bookmark, BookmarkType, FolderInfos, DetailPerFolder, Details };
+export type {
+  FsContentBack,
+  Bookmark, BookmarkType,
+  FolderInfos, DetailPerFolder, Details,
+  User,
+};
