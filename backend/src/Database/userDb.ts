@@ -51,7 +51,7 @@ export class UserDb extends JsonDb<{ [key: string]: User }> {
         Object.entries(data).filter((([_, value]) => value != undefined))
       );
 
-      if (data.password) {
+      if (data.password != null) {
         data.password = await argon2.hash(data.password, {
           timeCost: 10,
           hashLength: 128,
@@ -72,7 +72,7 @@ export class UserDb extends JsonDb<{ [key: string]: User }> {
 
   async getAll(): Promise<User[]> {
     if (this.isJsonDatabase) {
-      return Object.values(this.data).map(u => {
+      return Object.values(structuredClone(this.data)).map(u => {
         delete u.password;
         return u;
       });

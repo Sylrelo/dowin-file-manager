@@ -1,14 +1,14 @@
-@import url("/tabler-icons.min.css");
+@import url("/resources/tabler-icons.min.css");
 @import url("variables.css");
 
 @font-face {
   font-family: OpenSans;
-  src: url(/OpenSans-VariableFont_wdth,wght.ttf);
+  src: url(/resources/OpenSans-VariableFont_wdth,wght.ttf);
 }
 
 @font-face {
   font-family: Quicksand;
-  src: url(/Quicksand-VariableFont_wght.ttf);
+  src: url(/resources/Quicksand-VariableFont_wght.ttf);
 }
 
 /* * {

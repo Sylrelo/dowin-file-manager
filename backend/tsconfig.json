@@ -5,12 +5,13 @@
   "compilerOptions": {
     "module": "CommonJS",
     "esModuleInterop": true,
-    "target": "es6",
+    "target": "ES2021",
     "moduleResolution": "Node",
     "sourceMap": true,
     "outDir": "dist",
   },
   "lib": [
     "es2020",
+    "es2021",
   ]
 }

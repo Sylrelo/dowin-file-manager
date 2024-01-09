@@ -10,9 +10,9 @@ export class Http {
 
 
         if (loc.port === "8000")
-            return "http://" + loc.hostname + ":3000/"
+            return "http://" + loc.hostname + ":3000/api/"
 
-        return window.location.protocol + "//" + window.location.host + "/"
+        return window.location.protocol + "//" + window.location.host + "/api/"
     })();
 
     static get HEADERS() {

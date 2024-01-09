@@ -1,4 +1,5 @@
 import { readFile, writeFile } from "fs/promises";
+import { info } from "npmlog";
 interface Share {
   uuid: string
   path: string
@@ -36,7 +37,7 @@ export class JsonDb<T> {
       const data = await readFile(this.#jsonPath);
       this.data = JSON.parse(data.toString());
       this.verifyJsonDb();
-      console.log(`Loaded ${this.#jsonPath}.`);
+      info("Database", `Loaded ${this.#jsonPath}.`);
     } catch (err) {
       if (err.code === "ENOENT") {
         this.data = init;

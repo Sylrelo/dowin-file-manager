@@ -30,12 +30,13 @@
 </script>
 
 <div class="win-list">
+  <button class="btn" on:click={() => openSetting()}>
+    <TablerIcon icon="adjustments" />
+  </button>
+
   <button class="btn" on:click={() => openWindow()}>
     <TablerIcon icon="plus" />
     <span>New Window</span>
-  </button>
-  <button class="btn" on:click={() => openSetting()}>
-    <TablerIcon icon="adjustments" />
   </button>
 
   {#each $windowsNew as window (window.uuid)}
