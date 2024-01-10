@@ -196,10 +196,8 @@ class UploadQueue extends JobQueue<UploadJob> {
     }
 }
 
-// export const uploadJobQueueInitializer = { uploadJobQueue: undefined };
 export let uploadJobQueue: UploadQueue;
 
 export function initUploadQueue() {
-    console.log("HELLO");
     uploadJobQueue = new UploadQueue();
 }

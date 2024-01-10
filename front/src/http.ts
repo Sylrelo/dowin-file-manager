@@ -109,8 +109,6 @@ export class Http {
         if (config.chunkId != null && config.chunkRangeMin != null && config.chunkRangeMax != null) {
             frm.append("chunkRange", ((config.chunkRangeMin << 16) | config.chunkRangeMax).toString());
             frm.append("chunkId", config.chunkId.toString());
-
-            console.log(config.chunkRangeMin, config.chunkRangeMax, config.chunkRangeMax - config.chunkRangeMin);
         }
 
         frm.append("file", file);

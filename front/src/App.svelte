@@ -39,7 +39,6 @@
 
           window.localStorage.setItem("uvali", response.validUntil);
           window.localStorage.setItem("usess", response.authToken);
-          console.log(response);
         } catch (_) {
           //
         }

@@ -9,7 +9,6 @@
   let isBusy: boolean = false;
 
   onMount(() => {
-    console.log("Heyyy");
     checkLogin();
   });
 
