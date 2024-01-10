@@ -7,12 +7,14 @@
     "start": "tsc && node dist/entry.js",
     "build": "tsc -p ./tsconfig.json ",
     "lint": "eslint . --ext .ts",
-    "watch": "tsc-watch --noClear -p ./tsconfig.json --onSuccess 'node ./dist/entry.js'"
+    "watch": "tsc-watch --noClear -p ./tsconfig.json --onSuccess 'node ./dist/entry.js'",
+    "test": "tap test/*.test.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@tapjs/before": "^1.1.17",
     "@types/node": "^20.10.6",
     "@typescript-eslint/eslint-plugin": "^6.18.0",
     "@typescript-eslint/parser": "^6.18.0",

@@ -1,12 +1,12 @@
-import { stat, copyFile as fsCopyFile, constants, link, symlink } from "fs/promises";
-import { FsContent, ReadDir, getFileType } from "./read_dir";
 import { AsyncOptions, Options, ProgressData } from "copy-file";
-import { error } from "npmlog";
-import { createFolderIfNotExists } from "./utils";
 import { Dirent, Stats } from "fs";
+import { constants, copyFile as fsCopyFile, stat, symlink } from "fs/promises";
+import { error } from "npmlog";
 import path from "path";
-import { sleep } from "../global";
 import { Aborter } from "../Controllers/fs";
+import { sleep } from "../global";
+import { FsContent, ReadDir, getFileType } from "./read_dir";
+import { createFolderIfNotExists } from "./utils";
 
 let copyFile: (source: string, destination: string, options?: Options & AsyncOptions) => Promise<void>;
 
