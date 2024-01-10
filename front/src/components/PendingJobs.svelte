@@ -7,6 +7,7 @@
   import { slide } from "svelte/transition";
   import { Http } from "../http";
   import { sizeFormatter } from "../utils";
+  import type { AnonymousFunction } from "@backend/src/types";
 
   interface Job {
     title: string;
@@ -18,6 +19,8 @@
 
     id: string;
     job_id: string;
+
+    abort?: AnonymousFunction;
   }
 
   let runningJobs: Job[] = [];
@@ -92,6 +95,9 @@
           on:click={async () => {
             if (job.type === "CP" || job.type === "MV") {
               await Http.post("fs/cancel/" + job.job_id, {});
+            }
+            if (job.type === "UP") {
+              job.abort?.();
             }
           }}
         >

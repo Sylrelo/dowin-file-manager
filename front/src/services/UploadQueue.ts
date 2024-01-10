@@ -1,4 +1,5 @@
 import { Http } from "../http";
+import { explorerWindowRefresh } from "../stores/global";
 import { getNameBeforeLastSlash } from "../utils";
 import { JobQueue, type Job } from "./JobQueue";
 
@@ -11,6 +12,10 @@ interface UploadJob extends Job {
 
     speed?: number
     _lastReportTime?: number
+
+    windowUuid: string
+
+    _cancelled?: boolean
 }
 
 interface ChunkInfos {
@@ -27,11 +32,12 @@ class UploadQueue extends JobQueue<UploadJob> {
         this.name = "Upload Queue";
     }
 
-    public addUpload(dst: string, file: File): void {
+    public addUpload(windowUuid: string, dst: string, file: File): void {
         console.log("Adding ", file.name, dst)
         this.add({
             dst,
             file,
+            windowUuid
         })
     }
 
@@ -71,7 +77,7 @@ class UploadQueue extends JobQueue<UploadJob> {
     }
 
     private getChunkInfos(job: UploadJob) {
-        const CHUNK_SIZE = 1024 * 1024 * 80;
+        const CHUNK_SIZE = 1024 * 1024 * 50;
         const totalChunks = Math.ceil(job.file.size / CHUNK_SIZE);
 
         return {
@@ -93,6 +99,10 @@ class UploadQueue extends JobQueue<UploadJob> {
         let timeStart = Date.now();
 
         while (start < job.file.size) {
+            if (job._cancelled === true) {
+                break;
+            }
+
             const chunkEnd = Math.min(start + chunkInfo.chunkSize, job.file.size);
             const currentChunkSize = chunkEnd - start;
             const chunk = job.file.slice(start, chunkEnd);
@@ -100,7 +110,8 @@ class UploadQueue extends JobQueue<UploadJob> {
             chunkQueue.push(this.uploadChunk(job, start, chunk, currentChunkSize, chunkId, updateFn))
 
             if (chunkQueue.length >= this.MAX_CONCURRENT_CHUNK) {
-                await Promise.all(chunkQueue);
+                const promises = Promise.all(chunkQueue);
+                await promises;
                 chunkQueue = []
             }
 
@@ -108,7 +119,8 @@ class UploadQueue extends JobQueue<UploadJob> {
             start += chunkInfo.chunkSize;
         }
 
-        //progressPerChunks[chunkId] = percentage;
+        explorerWindowRefresh.set([job.windowUuid, Date.now()]);
+
         let timeEnd = Date.now();
         console.log("Taken ", timeEnd - timeStart);
     }
@@ -143,7 +155,10 @@ class UploadQueue extends JobQueue<UploadJob> {
             progress: Math.round(job.progress ?? 0),
             speed: job.speed ?? -1,
             type: "UP",
-            id: job._id
+            id: job._id,
+            abort: () => {
+                job._cancelled = true;
+            }
         }))
     }
 }

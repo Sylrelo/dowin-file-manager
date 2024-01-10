@@ -161,7 +161,7 @@
     {#if fileTarget?.type === "Directory"}
       <button class="btn" on:click={() => openNewWindow()}>
         <TablerIcon icon="app-window" />
-        Open in new Window
+        Open in new window
       </button>
       <button class="btn" on:click={() => openFolderInfos()}>
         <TablerIcon icon="chart-pie" />

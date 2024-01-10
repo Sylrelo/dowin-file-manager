@@ -1,4 +1,5 @@
 import { Http } from "../http";
+import { explorerWindowRefresh } from "../stores/global";
 import type { SelectedFile } from "../stores/pathSelection";
 import { getNameBeforeLastSlash, sleep } from "../utils";
 import { JobQueue, type Job } from "./JobQueue";
@@ -14,6 +15,8 @@ interface FsJob extends Job {
     speed?: number
 
     job_id?: string
+
+    windowUuid: string,
 }
 
 class FsQueue extends JobQueue<FsJob> {
@@ -22,12 +25,13 @@ class FsQueue extends JobQueue<FsJob> {
         this.name = "Upload Queue";
     }
 
-    public addMultiple(type: FsJobType, srcs: SelectedFile[], dst: string): void {
+    public addMultiple(windowUuid: string, type: FsJobType, srcs: SelectedFile[], dst: string): void {
         for (const src of srcs) {
             this.add({
                 src: src.path,
                 dst,
-                type
+                type,
+                windowUuid,
             })
         }
     }
@@ -76,6 +80,9 @@ class FsQueue extends JobQueue<FsJob> {
             } as FsJob)
 
             await sleep(500);
+
+            explorerWindowRefresh.set([currentJob.windowUuid, Date.now()]);
+
         } catch (err) {
             console.error(err)
         }

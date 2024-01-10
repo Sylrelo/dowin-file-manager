@@ -1,5 +1,4 @@
 <script lang="ts">
-  import internal from "stream";
   import { MouseTarget, mouseTarget } from "../events/MouseTarget";
   import { uploadJobQueue } from "../services/UploadQueue";
 
@@ -42,7 +41,11 @@
 
   // =======================================================
 
-  const addFileToUploadQueue = (path: string, file: File) => {
+  const addFileToUploadQueue = (
+    windowUuid: string,
+    path: string,
+    file: File
+  ) => {
     if (path.endsWith("/")) {
       path.slice(0, -1);
     }
@@ -55,11 +58,11 @@
       path = path.slice(0, -file.name.length - 1);
     }
 
-    uploadJobQueue.addUpload(path, file);
+    uploadJobQueue.addUpload(windowUuid, path, file);
   };
 
   const getFileEntryAsFile = async (
-    entry: FileSystemFileEntry,
+    entry: FileSystemFileEntry
   ): Promise<File> => {
     return new Promise(async (resolve, reject) => {
       //@ts-ignore
@@ -74,14 +77,15 @@
   };
 
   const recursivelyExploreDirectory = async (
+    windowUuid: string,
     path: string,
-    item: FileSystemEntry,
+    item: FileSystemEntry
   ) => {
     //@ts-ignore
     if (item.isFile || item?.kind === "file") {
       const file = await getFileEntryAsFile(item as FileSystemFileEntry);
 
-      addFileToUploadQueue(path, file);
+      addFileToUploadQueue(windowUuid, path, file);
       return;
     }
 
@@ -99,7 +103,7 @@
 
       reader.readEntries(async (entries) => {
         for (const entry of entries) {
-          await recursivelyExploreDirectory(path, entry);
+          await recursivelyExploreDirectory(windowUuid, path, entry);
         }
       });
     }
@@ -131,9 +135,10 @@
       return;
     }
 
+    let windowUuid: string = $mouseTarget.window?.uuid!;
     if (!supportsFileSystemAccessAPI && !supportsWebkitGetAsEntry) {
       for (const file of e.dataTransfer?.files ?? []) {
-        addFileToUploadQueue(destinationPath, file);
+        addFileToUploadQueue(windowUuid, destinationPath, file);
         console.warn("Browser do not support FileSystem API.");
       }
 
@@ -146,19 +151,19 @@
           ? //@ts-ignore
             item.getAsFileSystemHandle()
           : //@ts-ignore
-            item.webkitGetAsEntry(),
+            item.webkitGetAsEntry()
       );
     }
 
     for await (const handle of files) {
       //@ts-ignore
       if (handle.kind === "directory" || handle.isDirectory) {
-        await recursivelyExploreDirectory(destinationPath, handle);
+        await recursivelyExploreDirectory(windowUuid, destinationPath, handle);
       } else {
         const asFile = await getFileEntryAsFile(
-          handle as unknown as FileSystemFileEntry,
+          handle as unknown as FileSystemFileEntry
         );
-        addFileToUploadQueue(destinationPath, asFile);
+        addFileToUploadQueue(windowUuid, destinationPath, asFile);
       }
     }
 
