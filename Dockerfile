@@ -1,4 +1,7 @@
-FROM node:20-alpine3.19 as builder
+FROM alpine:latest as builder
+
+RUN apk add --update nodejs
+RUN apk add --update npm
 
 WORKDIR /front
 COPY ./front /front
@@ -10,15 +13,27 @@ COPY ./backend /backend
 RUN npm install
 RUN npm run build
 
-FROM node:20-alpine3.19 as runner
+# ---------------------------------- RUNNER ---------------------------------- #
+
+FROM alpine:latest as runner
+RUN apk add --update nodejs
+RUN apk add --update npm
+
 ENV NODE_ENV=production
 
 COPY --from=builder /front/dist /front/dist
-COPY --from=builder /backend /backend
+
+COPY --from=builder /backend/dist /backend/dist
+COPY --from=builder /backend/package.json /backend/package.json
+COPY --from=builder /backend/package-lock.json /backend/package-lock.json
+
 
 WORKDIR /backend/dist
 RUN npm install
 
+RUN pwd
+RUN ls -l
+
 
 EXPOSE 3000
-CMD ["entry.js"]
+CMD ["node", "entry.js"]

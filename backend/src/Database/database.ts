@@ -1,3 +1,4 @@
+import { mkdirSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { info } from "npmlog";
 interface Share {
@@ -18,7 +19,12 @@ export class JsonDb<T> {
 
   constructor(jsonPath: string = "", init: any = undefined) {
     if (this.isJsonDatabase) {
-      this.#jsonPath = jsonPath;
+      try {
+        mkdirSync("database/");
+      } catch (_) {
+        //
+      }
+      this.#jsonPath = "database/" + jsonPath;
       this.data = init;
       this.loadJsonDb(init);
     }
@@ -34,7 +40,7 @@ export class JsonDb<T> {
 
   async loadJsonDb(init: any) {
     try {
-      const data = await readFile(this.#jsonPath);
+      const data = await readFile(this.#jsonPath,);
       this.data = JSON.parse(data.toString());
       this.verifyJsonDb();
       info("Database", `Loaded ${this.#jsonPath}.`);

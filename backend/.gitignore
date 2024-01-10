@@ -1,2 +1,3 @@
 db_*.json
 dist/
+database/

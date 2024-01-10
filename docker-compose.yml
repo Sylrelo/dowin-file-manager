@@ -1,55 +1,11 @@
 version: '3.0'
 
 services:
-  # dev-env:
-  #   build: .
-  #   volumes:
-  #     - ./back-rs:/app/back-rs
-  #     - ./front:/app/front
-
-  #     - rs_target_back_dev:/app/back-rs/target
-  #     - node_modules_front:/app/front/node_modules
-
-  #   command: sleep infinity
-
-  front:
-    image: node:20-bookworm
-    working_dir: /app/front
-    volumes:
-      - ./front:/app/front
-      - ./back-rs/bindings:/app/back-rs/bindings
-      - node_modules_front:/app/front/node_modules
-
-    command: bash -c "npm install && npm run dev"
-    # command: bash -c "bun install && bun run dev --host"
-    ports:
-      - '8000:5173'
-
-  back-rs:
+  dowin-file-manager:
     build: .
-    working_dir: /app/back-rs
     volumes:
-
-      - ./test-dir/1:/manager/test-dir
-      - ./test-dir/2:/manager/test-dir2
-      - ./test-dir/3:/manager/test-dir3
-      - ./test-dir/4:/manager/test-dir4
-
-      # - /Users/slopez:/manager/slopez-mac:ro
-
-      # - C:\Users\Synlo\Downloads:/manager/downloads:delegated
-
-      - ./front:/app/front
-
-      - ./back-rs:/app/back-rs
-      - rs_target_back:/app/back-rs/target
-
-    # command: bash -c "cargo run --release"
-    # command: bash -c "cargo install cargo-watch && cargo watch -x 'run'"
-    # command: bash -c "cargo install cargo-watch && cargo watch -x 'run -- -release'"
+      - /Users/:/manager/Users
+    environment:
+      - FM_PATH_PREFIX=/
     ports:
-      - '8080:8080'
-
-volumes:
-  node_modules_front:
-  rs_target_back:
+      - 3000:3000
