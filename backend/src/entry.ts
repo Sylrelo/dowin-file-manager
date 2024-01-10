@@ -14,10 +14,13 @@ import { default as UserController } from "./Controllers/user";
 import { info } from "npmlog";
 import path from "path";
 import authMiddleware from "./authMiddleware";
+import { customErrorHandler } from "./errorHandler";
+import { BANNED_IP_TIMEOUT, SESSIONS } from "./global";
 
 /* --------------------------------- CONSTS --------------------------------- */
 
 export const PATH_PREFIX = process.env?.["FM_PATH_PREFIX"] ?? "/";
+export const SESSION_TIMEOUT = 1000 * 3600 * 12;
 
 /* ------------------------------ INIT FASTIFY ------------------------------ */
 
@@ -43,6 +46,7 @@ fastify.register(fastifyStatic, {
 
 
 fastify.register(authMiddleware);
+fastify.setErrorHandler(customErrorHandler);
 
 /* ----------------------- HOOK FOR REVERSE-PROXY PATH ---------------------- */
 
@@ -135,6 +139,22 @@ const SIGNALS = {
     });
 
     info("Start", `Using "${PATH_PREFIX}" path prefix.`);
+
+    setInterval(() => {
+      for (const key in SESSIONS) {
+        if (Date.now() >= SESSIONS[key].createdAt + SESSION_TIMEOUT) {
+          info("Session Cleaner", "Cleaning " + key);
+          delete SESSIONS[key];
+        }
+      }
+
+      for (const key in BANNED_IP_TIMEOUT) {
+        if (Date.now() - BANNED_IP_TIMEOUT[key].firstTryAt >= 60000 && BANNED_IP_TIMEOUT[key].try >= 3) {
+          info("Ban Cleaner", "Cleaning " + key);
+          delete BANNED_IP_TIMEOUT[key];
+        }
+      }
+    }, 60000 * 5);
 
     await fastify.listen({ port: 3000, host: "0.0.0.0" });
   } catch (err) {

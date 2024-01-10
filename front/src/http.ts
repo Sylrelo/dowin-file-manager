@@ -16,7 +16,7 @@ export class Http {
     })();
 
     static get HEADERS() {
-        const bearer = localStorage.getItem("ab");
+        const bearer = localStorage.getItem("usess");
         let headers: { [key: string]: string } = {}
 
         if (null != bearer) {
@@ -53,7 +53,8 @@ export class Http {
 
         } catch (err: any) {
             if (err.response.status === 401) {
-                localStorage.removeItem("ab");
+                localStorage.removeItem("usess");
+                localStorage.removeItem("uvali");
                 currentUser.set(null)
             }
             throw new Error(err)
@@ -76,7 +77,6 @@ export class Http {
 
         return await response.text();
     }
-
 
     static put = async (endpoint: string, id: string, data: any): Promise<any> => {
         return this.make("put", endpoint + "/" + id, data);

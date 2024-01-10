@@ -80,7 +80,6 @@ export async function FsMove(srcPath: string, dstPath: string, options: MoveOpti
   } else if (srcMetadata.isFile()) {
 
     const filename = path.basename(srcPath);
-    const dstFilePath = path.join(dstPath, filename);
 
     await MoveFile({
       fullPath: srcPath,
@@ -88,7 +87,7 @@ export async function FsMove(srcPath: string, dstPath: string, options: MoveOpti
       fileType: getFileType(srcMetadata as unknown as Dirent),
       metadata: undefined,
       path: "",
-    }, dstFilePath, opt);
+    }, dstPath, opt);
   }
 
 }

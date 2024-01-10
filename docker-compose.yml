@@ -5,7 +5,11 @@ services:
     build: .
     volumes:
       - /Users/:/manager/Users
+      - fm-database:/backend/database
     environment:
       - FM_PATH_PREFIX=/
     ports:
       - 3000:3000
+
+volumes:
+  fm-database:

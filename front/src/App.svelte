@@ -17,11 +17,33 @@
   import BlankWindow from "./components/window/generic-window/BlankWindow.svelte";
   import FileRightClick from "./listeners/FileRightClick.svelte";
   import { hexToRgb, rgbToHex } from "./utils";
+  import { Http } from "./http";
 
   onMount(() => {
     keyEvent.init();
     mouseButtonEvent.init();
     mouseEvent.init();
+
+    setInterval(async () => {
+      const validUntil = window.localStorage.getItem("uvali");
+      if (!validUntil) {
+        return;
+      }
+
+      const dateNow = Date.now();
+
+      if (+validUntil - dateNow <= 1800 * 1000) {
+        try {
+          const response = await Http.post("users/login_refresh", {});
+
+          window.localStorage.setItem("uvali", response.validUntil);
+          window.localStorage.setItem("usess", response.authToken);
+          console.log(response);
+        } catch (_) {
+          //
+        }
+      }
+    }, 60000);
   });
 
   const onContextMenu = (evt: Event) => {
