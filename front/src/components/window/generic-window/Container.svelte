@@ -1,8 +1,13 @@
 <script lang="ts">
   export let withLeftbar: boolean = true;
+  export let domElement: HTMLElement | undefined = undefined;
 </script>
 
-<div class="content-container" class:with-leftbar={withLeftbar}>
+<div
+  class="content-container"
+  class:with-leftbar={withLeftbar}
+  bind:this={domElement}
+>
   <slot />
 </div>
 

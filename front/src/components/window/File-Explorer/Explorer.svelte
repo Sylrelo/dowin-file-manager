@@ -2,10 +2,6 @@
   import Container from "../generic-window/Container.svelte";
   import GenericLeftbar from "../generic-window/GenericLeftbar.svelte";
   import Content from "./Content.svelte";
-
-  export let win: ExplorerWindow;
-  const { path } = win.ctx;
-
   import { onMount, setContext } from "svelte";
   import type { ExplorerWindow } from "./ExplorerWindow";
   import { get } from "svelte/store";
@@ -16,6 +12,11 @@
   } from "../../../stores/global";
   import Mount from "./Mount.svelte";
   import { keyEvent } from "../../../events/Keyboard";
+
+  export let win: ExplorerWindow;
+
+  const { path } = win.ctx;
+  let _contentElement: HTMLElement;
 
   $: win && setContext("window-data", win);
 
@@ -31,6 +32,8 @@
 
   const onMountChange = (data: CustomEvent) => {
     path.set(data.detail.path);
+    searchQuery = "";
+    _contentElement.scrollTop = 0;
     // win.mountPoint = data.detail.path;
     // onDirectoryChange(win.mountPoint);
   };
@@ -51,6 +54,8 @@
     currentHistoryPath += 1;
 
     windowListTitleRefresh.set(Date.now());
+    searchQuery = "";
+    _contentElement.scrollTop = 0;
   };
 
   const onHistoryClick = (way: number) => {
@@ -66,6 +71,8 @@
 
     path.set(pathHistory[currentHistoryPath]);
     windowListTitleRefresh.set(Date.now());
+    searchQuery = "";
+    _contentElement.scrollTop = 0;
   };
 
   let searchQuery = "";
@@ -93,7 +100,8 @@
 <GenericLeftbar>
   <Mount on:onMountChange={onMountChange} />
 </GenericLeftbar>
-<Container>
+
+<Container bind:domElement={_contentElement}>
   <!-- <div class="scrollable"> -->
   <Content
     {refresh}

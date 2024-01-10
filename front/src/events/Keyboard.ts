@@ -18,6 +18,10 @@ class KeyEvent extends CustomEventClass<KeyPressed, Writable<string | null>> {
     const _lastPressedKey = get(this.data) !== event.key ? event.key : null
     this.data.set(_lastPressedKey);
 
+    setTimeout(() => {
+      this.data.set(null);
+    }, 100);
+
     this.update(old => ({
       ...old,
       [event.key]: true

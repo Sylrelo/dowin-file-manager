@@ -8,6 +8,8 @@
   import type { FsContent, FsContentBack } from "../../../interfaces";
   import { Filetype } from "../../../utilities/Filetype";
 
+  /* -------------------------------- COMPONENT ------------------------------- */
+
   export let path: string = "";
   export let refresh: number = 0;
   export let searchQuery: string = "";
