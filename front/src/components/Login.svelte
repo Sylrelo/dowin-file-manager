@@ -14,17 +14,21 @@
 
   const checkLogin = async () => {
     try {
-      if (null == localStorage.getItem("ab")) {
+      if (
+        null == localStorage.getItem("usess") ||
+        null == localStorage.getItem("uvali")
+      ) {
         return;
       }
 
-      const response = await Http.get("users/me");
+      await Http.get("users/me");
 
       currentUser.set({});
     } catch (error: any) {
       console.error(error.message);
       currentUser.set(null);
-      localStorage.removeItem("ab");
+      localStorage.removeItem("usess");
+      localStorage.removeItem("uvali");
     }
   };
 
@@ -35,7 +39,8 @@
         password,
       });
 
-      localStorage.setItem("ab", response.authToken);
+      localStorage.setItem("usess", response.authToken);
+      localStorage.setItem("uvali", response.validUntil);
 
       await checkLogin();
     } catch (error: any) {

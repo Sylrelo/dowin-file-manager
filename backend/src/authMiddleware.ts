@@ -1,13 +1,15 @@
 import fp from "fastify-plugin";
 import { Request } from "./types";
 import { SESSIONS, USER_DB } from "./global";
-import { PATH_PREFIX } from "./entry";
+import { PATH_PREFIX, SESSION_TIMEOUT } from "./entry";
+import { Unauthorized } from "./errorHandler";
 
 export default fp(function (fastify, _options, done) {
   fastify.decorateRequest("userUuid", "");
   fastify.decorateRequest("userRole", "");
+  fastify.decorateRequest("userSessionId", "");
 
-  fastify.addHook("onRequest", async function (request: Request, response) {
+  fastify.addHook("onRequest", async function (request: Request, _response) {
     const url = request.url.replace(PATH_PREFIX, "");
 
     if (
@@ -26,27 +28,35 @@ export default fp(function (fastify, _options, done) {
     const authHeader = request.headers?.authorization;
 
     if (authHeader == null) {
-      response.code(401);
-      return { message: "Missing header." };
+      throw new Unauthorized("Missing auth header.");
     }
 
     const bearerToken = authHeader.slice(7);
     const session = SESSIONS?.[bearerToken];
 
     if (session == null) {
-      response.code(401);
-      return { message: "Invalid session." };
+      throw new Unauthorized("Invalid session.");
+    }
+
+    if (
+      session.userAgent !== (request.headers["user-agent"] ?? "") ||
+      session.ip !== request.ip
+    ) {
+      throw new Unauthorized("Session mismatch.");
+    }
+
+    if (Date.now() - session.createdAt >= SESSION_TIMEOUT) {
+      throw new Unauthorized("Expired session.");
     }
 
     const user = await USER_DB.getOne(session.userUuid);
     if (user == null) {
-      response.code(401);
-      return { message: "Invalid user." };
+      throw new Unauthorized("Invalid user.");
     }
 
+    request.userSessionId = bearerToken;
     request.userUuid = session.userUuid;
     request.userRole = user.role;
-
 
     return {};
   });

@@ -11,10 +11,14 @@ export const BOOKMARK_DB = new BookmarkDb();
 
 export interface UserSession {
   userUuid: string
-  // role: string
+  ip: string
+  userAgent: string
+  createdAt: number
 }
 
 export const SESSIONS: { [key: string]: UserSession } = {};
+export const BANNED_IP_TIMEOUT: { [key: string]: any } = {};
+
 
 setTimeout(async () => {
   if (USER_DB.count !== 0) return;
