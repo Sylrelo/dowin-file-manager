@@ -1,3 +1,18 @@
+<div align="center">
+
+![GitHub last commit (release)](https://img.shields.io/github/last-commit/Sylrelo/dowin-file-manager/release?label=last%20release%20commit&style=for-the-badge)
+![GitHub last commit (dev)](https://img.shields.io/github/last-commit/Sylrelo/dowin-file-manager/dev?label=last%20dev%20commit&style=for-the-badge)
+
+</div>
+
+<div align="center">
+
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Sylrelo/dowin-file-manager)
+![Docker Pulls](https://img.shields.io/docker/pulls/sylrelo/dowin-file-manager)
+![Docker Image Size (tag)](https://img.shields.io/docker/image-size/sylrelo/dowin-file-manager/latest)
+
+</div>
+
 # Dowin File Manager
 
 Dowin File Manager is a web-based file and server manager written in Node and Svelte
