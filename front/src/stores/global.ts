@@ -1,20 +1,20 @@
 import { writable, get as svelteGet } from "svelte/store";
 import type { Window } from "../components/window/Window";
-import type { Bookmark } from "../interfaces";
+import type { GlobalSetting, Bookmark } from "../interfaces";
 
-
-// #######################################################
-
-export const activeWindow = writable<string>("")
-
-export const windowsNew = writable<Window[]>([]);
-
+/* ----------------------------- GLOBAL SETTINGS ---------------------------- */
 
 export const currentUser = writable<any | null>(null)
+export const globalSettings = writable<GlobalSetting>(undefined);
 
+/* ------------------------------ WINDOW STORES ----------------------------- */
+
+export const activeWindow = writable<string>("")
+export const windowsNew = writable<Window[]>([]);
 export const windowListTitleRefresh = writable<number>(Date.now())
-
 export const explorerWindowRefresh = writable<[string, number]>(["", 0]);
+
+/* ------------------------------- UTILS STORE ------------------------------ */
 
 export enum CurrentDrag {
     None,

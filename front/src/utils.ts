@@ -20,6 +20,11 @@ export function formatNumber(num: number | undefined, precision: number = 1, typ
         return "-"
     }
 
+    //TODO : Handle big number
+    if (num === Infinity) {
+        return "∞";
+    }
+
     let result = num.toString();
 
     const div = (n: number, post: string) => {

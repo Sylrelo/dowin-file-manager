@@ -10,8 +10,9 @@ import { default as DirController } from "./Controllers/dir";
 import { default as FsController } from "./Controllers/fs";
 import { default as UploadController } from "./Controllers/upload";
 import { default as UserController } from "./Controllers/user";
+import { default as SettingsController } from "./Controllers/settings";
 
-import { info } from "npmlog";
+import { error, info } from "npmlog";
 import path from "path";
 import authMiddleware from "./authMiddleware";
 import { customErrorHandler } from "./errorHandler";
@@ -30,9 +31,14 @@ const fastify = Fastify({
 
 fastify.register(fastifyMultipart, {
   limits: {
-    fileSize: 100 * 1000 * 1000
+    fileSize: 200 * 1000 * 1000
   },
 });
+
+if (process.env?.["EXP_MAX_CHUNK_SIZE"] && +process.env["EXP_MAX_CHUNK_SIZE"] > 200) {
+  error("Config", "EXP_MAX_CHUNK_SIZE cannot be more than 200");
+  process.exit(1);
+}
 
 fastify.register(fastifyCors, {
   origin: "*"
@@ -115,6 +121,7 @@ fastify.register(FsController, { prefix: "/api/fs" });
 fastify.register(UploadController, { prefix: "/api/upload" });
 fastify.register(UserController, { prefix: "/api/users" });
 fastify.register(BookmarkController, { prefix: "/api/bookmarks" });
+fastify.register(SettingsController, { prefix: "/api/settings" });
 
 /* ------------------------------- SERVER MAIN ------------------------------ */
 

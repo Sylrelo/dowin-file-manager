@@ -122,6 +122,14 @@ info Default account Default "Admin" account created with password "4tynah". Don
 | ------------------ | ------------------------------------------------------- | ------- |
 | **FM_PATH_PREFIX** | Path prefix for all queries, usefull for reverse proxy. | `/`     |
 
+### Available experimental features environment variables
+
+| Variable                       | Description                                          | Default |
+| ------------------------------ | ---------------------------------------------------- | ------- |
+| **EXP_MAX_CHUNK_SIZE**         | Maximum chunk size for file upload (max 200)         | `100`   |
+| **EXP_CONCURRENT_CHUNKS**      | Maximum concurrent uploading chunk for a single file | `1`     |
+| **EXP_CONCURRENT_FILE_UPLOAD** | Maximum concurrent file upload                       | `4`     |
+
 ## Build it !
 
 ### Dependencies

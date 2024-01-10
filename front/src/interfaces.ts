@@ -2,6 +2,8 @@ import type { FsContent as FsContentBack } from "@backend/src/Services/read_dir"
 import type { Bookmark, BookmarkType } from "@backend/src/Controllers/bookmarks";
 import type { FolderInfos, DetailPerFolder, Details } from "@backend/src/Services/read_dir_infos";
 import type { User } from "@backend/src/Database/userDb";
+import type { GlobalSetting, UploadSetting } from "@backend/src/Database/database";
+
 
 import type { Filetype } from "./utilities/Filetype";
 
@@ -19,4 +21,6 @@ export type {
   Bookmark, BookmarkType,
   FolderInfos, DetailPerFolder, Details,
   User,
+
+  GlobalSetting, UploadSetting
 };

@@ -1,6 +1,7 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { MouseTarget, mouseTarget } from "../events/MouseTarget";
-  import { uploadJobQueue } from "../services/UploadQueue";
+  import { initUploadQueue, uploadJobQueue } from "../services/UploadQueue";
 
   // =======================================================
 
@@ -10,6 +11,13 @@
   const supportsWebkitGetAsEntry =
     "webkitGetAsEntry" in DataTransferItem.prototype;
 
+  onMount(() => {
+    initUploadQueue();
+
+    uploadJobQueue.subscribe((queue) => {
+      if (queue.length > 0) uploadJobQueue.run();
+    });
+  });
   // =======================================================
 
   const removeAllDragHighlight = () => {
@@ -183,10 +191,6 @@
   };
 
   /* -------------------------------------------------------------------------- */
-
-  $: if ($uploadJobQueue) {
-    uploadJobQueue.run();
-  }
 </script>
 
 <svelte:document

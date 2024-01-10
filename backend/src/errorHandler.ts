@@ -1,5 +1,6 @@
 import { FastifyReply } from "fastify";
 import { Request } from "./types";
+import { error as logError } from "npmlog";
 
 export function customErrorHandler(error: any, request: Request, reply: FastifyReply) {
   if (error instanceof HttpError) {
@@ -8,6 +9,7 @@ export function customErrorHandler(error: any, request: Request, reply: FastifyR
       .send({ message: error.message });
   }
   else {
+    logError("Error", error.message);
     reply.send(error);
   }
 }

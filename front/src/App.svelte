@@ -2,7 +2,7 @@
   import { onDestroy, onMount } from "svelte";
   import { isCtrlPressed } from "./stores/input";
   import PathDragEvent from "./listeners/FileDrag.svelte";
-  import { windowsNew } from "./stores/global";
+  import { globalSettings, windowsNew } from "./stores/global";
   import WindowDragEvent from "./listeners/WindowDragResize.svelte";
   import FileUpload from "./listeners/FileUpload.svelte";
   import { currentUser } from "./stores/global";
@@ -16,8 +16,9 @@
   import WindowsList from "./components/WindowsList.svelte";
   import BlankWindow from "./components/window/generic-window/BlankWindow.svelte";
   import FileRightClick from "./listeners/FileRightClick.svelte";
-  import { hexToRgb, rgbToHex } from "./utils";
+  import { hexToRgb, rgbToHex, sleep } from "./utils";
   import { Http } from "./http";
+  import { uploadJobQueue } from "./services/UploadQueue";
 
   onMount(() => {
     keyEvent.init();
@@ -122,13 +123,16 @@
   //
 </script>
 
-{#if $currentUser != null}
+{#if $currentUser != null && $globalSettings}
   <PathDragEvent />
   <WindowDragEvent />
   <FileUpload />
   <FileRightClick />
 
-  <PendingJobs />
+  <!-- FIXME: Temporary solution to wait for FileUpload to init UploadQueue that needs globalSetting store -->
+  {#await sleep(200) then}
+    <PendingJobs />
+  {/await}
   <WindowsList />
 
   {#each $windowsNew as window (window.uuid)}

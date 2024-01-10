@@ -54,9 +54,18 @@ export function getFileType(entry: Dirent, mode?: number) {
   return type;
 }
 
-export async function ReadDir(entryPath: string): Promise<FsContent[]> {
+interface ReadDirOptions {
+  ignoreMetadata?: boolean
+}
+
+export async function ReadDir(entryPath: string, customOptions: ReadDirOptions = {}): Promise<FsContent[]> {
   const result: FsContent[] = [];
   let dirents: Dirent[] = [];
+
+  const options: ReadDirOptions = {
+    ignoreMetadata: false,
+    ...customOptions,
+  };
 
   try {
     dirents = await readdir(entryPath, {
@@ -84,22 +93,25 @@ export async function ReadDir(entryPath: string): Promise<FsContent[]> {
       }
     }
 
-    try {
-      const statResult = await stat(symlinkOriginalPath ?? fullPath, {
-        bigint: false
-      });
+    if (options.ignoreMetadata !== true) {
+      try {
+        const statResult = await stat(symlinkOriginalPath ?? fullPath, {
+          bigint: false
+        });
 
-      metadata = {
-        size: statResult.size,
-        mode: statResult.mode,
+        metadata = {
+          size: statResult.size,
+          mode: statResult.mode,
 
-        accessedAt: statResult.atimeMs,
-        modifiedAt: statResult.mtimeMs,
-        createdAt: statResult.ctimeMs,
-      };
-    } catch (error) {
-      log.error("ReadDir [stat]", error.code, error.errno, error.syscall, error.path);
+          accessedAt: statResult.atimeMs,
+          modifiedAt: statResult.mtimeMs,
+          createdAt: statResult.ctimeMs,
+        };
+      } catch (error) {
+        log.error("ReadDir [stat]", error.code, error.errno, error.syscall, error.path);
+      }
     }
+
 
     result.push({
       name: dirent.name,
