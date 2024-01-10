@@ -87,10 +87,15 @@ export class Http {
     }
 
     static upload_file_xhr = async (
+        file: Blob,
         path: string,
-        filename: string,
-        offset: number,
-        chunk: Blob,
+        config: {
+            filename: string,
+            offset: number,
+            chunkId?: number,
+            chunkRangeMin?: number,
+            chunkRangeMax?: number,
+        },
         onUploadProgress: undefined | ((loaded: number) => void) = undefined
 
     ): Promise<any> => {
@@ -98,9 +103,15 @@ export class Http {
 
         let frm = new FormData();
         frm.append("dst", path);
-        frm.append("filename", filename);
-        frm.append("offset", offset.toString());
-        frm.append("file", chunk);
+        frm.append("filename", config.filename);
+        frm.append("offset", config.offset.toString());
+
+        if (config.chunkId != null && config.chunkRangeMin != null && config.chunkRangeMax != null) {
+            frm.append("chunkRange", ((config.chunkRangeMin << 16) | config.chunkRangeMax).toString());
+            frm.append("chunkId", config.chunkId.toString());
+        }
+
+        frm.append("file", file);
 
         xhr.open("POST", this.HOST + "upload")
 

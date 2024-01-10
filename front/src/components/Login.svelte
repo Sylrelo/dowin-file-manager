@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Http } from "../http";
-  import { currentUser } from "../stores/global";
+  import { currentUser, globalSettings } from "../stores/global";
 
   let username: string = "";
   let password: string = "";
@@ -20,6 +20,9 @@
       ) {
         return;
       }
+
+      const settings = await Http.get("settings");
+      globalSettings.set(settings);
 
       await Http.get("users/me");
 

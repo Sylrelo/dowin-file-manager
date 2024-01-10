@@ -3,6 +3,7 @@ import { Request } from "./types";
 import { SESSIONS, USER_DB } from "./global";
 import { PATH_PREFIX, SESSION_TIMEOUT } from "./entry";
 import { Unauthorized } from "./errorHandler";
+import { error } from "npmlog";
 
 export default fp(function (fastify, _options, done) {
   fastify.decorateRequest("userUuid", "");
@@ -28,6 +29,7 @@ export default fp(function (fastify, _options, done) {
     const authHeader = request.headers?.authorization;
 
     if (authHeader == null) {
+      error("Auth", "Missing auth header.");
       throw new Unauthorized("Missing auth header.");
     }
 
@@ -35,6 +37,7 @@ export default fp(function (fastify, _options, done) {
     const session = SESSIONS?.[bearerToken];
 
     if (session == null) {
+      error("Auth", "Invalid session.");
       throw new Unauthorized("Invalid session.");
     }
 
@@ -42,15 +45,18 @@ export default fp(function (fastify, _options, done) {
       session.userAgent !== (request.headers["user-agent"] ?? "") ||
       session.ip !== request.ip
     ) {
+      error("Auth", "Session mismatch.");
       throw new Unauthorized("Session mismatch.");
     }
 
     if (Date.now() - session.createdAt >= SESSION_TIMEOUT) {
+      error("Auth", "Expired session.");
       throw new Unauthorized("Expired session.");
     }
 
     const user = await USER_DB.getOne(session.userUuid);
     if (user == null) {
+      error("Auth", "Invalid user.");
       throw new Unauthorized("Invalid user.");
     }
 

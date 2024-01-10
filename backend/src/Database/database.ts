@@ -1,6 +1,7 @@
 import { mkdirSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { info } from "npmlog";
+
 interface Share {
   uuid: string
   path: string
@@ -8,8 +9,14 @@ interface Share {
   createdAt: number
 }
 
-interface GlobalSetting {
+export interface UploadSetting {
+  maxChunkSize: number
+  maxConcurrentChunks: number
+  maxConcurrentFileUpload: number
+}
 
+export interface GlobalSetting {
+  uploadSettings: UploadSetting
 }
 
 export class JsonDb<T> {

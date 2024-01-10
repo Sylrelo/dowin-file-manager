@@ -2,7 +2,6 @@
   import { fsJobQueue } from "../services/FsQueue";
   import { uploadJobQueue } from "../services/UploadQueue";
   import TablerIcon from "./Icons/TablerIcon.svelte";
-  import { v4 as uuidv4 } from "uuid";
 
   import { slide } from "svelte/transition";
   import { Http } from "../http";

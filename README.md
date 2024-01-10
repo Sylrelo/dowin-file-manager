@@ -1,3 +1,18 @@
+<div align="center">
+
+![GitHub last commit (release)](https://img.shields.io/github/last-commit/Sylrelo/dowin-file-manager/release?label=last%20release%20commit&style=for-the-badge)
+![GitHub last commit (dev)](https://img.shields.io/github/last-commit/Sylrelo/dowin-file-manager/dev?label=last%20dev%20commit&style=for-the-badge)
+
+</div>
+
+<div align="center">
+
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Sylrelo/dowin-file-manager)
+![Docker Pulls](https://img.shields.io/docker/pulls/sylrelo/dowin-file-manager)
+![Docker Image Size (tag)](https://img.shields.io/docker/image-size/sylrelo/dowin-file-manager/latest)
+
+</div>
+
 # Dowin File Manager
 
 Dowin File Manager is a web-based file and server manager written in Node and Svelte
@@ -106,6 +121,14 @@ info Default account Default "Admin" account created with password "4tynah". Don
 | Variable           | Description                                             | Default |
 | ------------------ | ------------------------------------------------------- | ------- |
 | **FM_PATH_PREFIX** | Path prefix for all queries, usefull for reverse proxy. | `/`     |
+
+### Available experimental features environment variables
+
+| Variable                       | Description                                          | Default |
+| ------------------------------ | ---------------------------------------------------- | ------- |
+| **EXP_MAX_CHUNK_SIZE**         | Maximum chunk size for file upload (max 200)         | `100`   |
+| **EXP_CONCURRENT_CHUNKS**      | Maximum concurrent uploading chunk for a single file | `1`     |
+| **EXP_CONCURRENT_FILE_UPLOAD** | Maximum concurrent file upload                       | `4`     |
 
 ## Build it !
 

@@ -1,6 +1,7 @@
+import { get } from "svelte/store";
 import { Http } from "../http";
-import { explorerWindowRefresh } from "../stores/global";
-import { getNameBeforeLastSlash } from "../utils";
+import { explorerWindowRefresh, globalSettings } from "../stores/global";
+import { getNameBeforeLastSlash, sleep } from "../utils";
 import { JobQueue, type Job } from "./JobQueue";
 
 interface UploadJob extends Job {
@@ -15,6 +16,8 @@ interface UploadJob extends Job {
 
     windowUuid: string
 
+    supInfos?: string
+
     _cancelled?: boolean
 }
 
@@ -25,10 +28,11 @@ interface ChunkInfos {
 
 class UploadQueue extends JobQueue<UploadJob> {
 
-    private MAX_CONCURRENT_CHUNK: number = 1;
+    private MAX_CONCURRENT_CHUNK: number = + get(globalSettings).uploadSettings.maxConcurrentChunks;
+    private MAX_CHUNK_SIZE: number = +get(globalSettings).uploadSettings.maxChunkSize;
 
     constructor() {
-        super(4)
+        super(+get(globalSettings).uploadSettings.maxConcurrentFileUpload)
         this.name = "Upload Queue";
     }
 
@@ -77,8 +81,10 @@ class UploadQueue extends JobQueue<UploadJob> {
     }
 
     private getChunkInfos(job: UploadJob) {
-        const CHUNK_SIZE = 1024 * 1024 * 50;
+        const CHUNK_SIZE = 1000 * 1000 * this.MAX_CHUNK_SIZE;
         const totalChunks = Math.ceil(job.file.size / CHUNK_SIZE);
+
+        console.log(this.MAX_CHUNK_SIZE, totalChunks, this.MAX_CONCURRENT_CHUNK);
 
         return {
             chunkSize: CHUNK_SIZE,
@@ -93,10 +99,13 @@ class UploadQueue extends JobQueue<UploadJob> {
     ): Promise<void> {
         let start = 0;
         let chunkId = 0;
-
         let chunkQueue: Promise<void>[] = [];
-
         let timeStart = Date.now();
+
+        let multichunkConfig = {
+            min: 99999,
+            max: chunkInfo.chunkCount
+        };
 
         while (start < job.file.size) {
             if (job._cancelled === true) {
@@ -107,22 +116,40 @@ class UploadQueue extends JobQueue<UploadJob> {
             const currentChunkSize = chunkEnd - start;
             const chunk = job.file.slice(start, chunkEnd);
 
-            chunkQueue.push(this.uploadChunk(job, start, chunk, currentChunkSize, chunkId, updateFn))
+            multichunkConfig.min = Math.min(chunkId, multichunkConfig.min);
+            chunkQueue.push(
+                this.uploadChunk(
+                    job,
+                    start,
+                    chunk,
+                    currentChunkSize,
+                    chunkId,
+                    this.MAX_CONCURRENT_CHUNK > 1 ? multichunkConfig : undefined,
+                    updateFn
+                )
+            )
 
             if (chunkQueue.length >= this.MAX_CONCURRENT_CHUNK) {
                 const promises = Promise.all(chunkQueue);
                 await promises;
+                await sleep(10)
+                multichunkConfig.min = 99999;
                 chunkQueue = []
             }
 
             chunkId++;
             start += chunkInfo.chunkSize;
         }
-
-        explorerWindowRefresh.set([job.windowUuid, Date.now()]);
-
         let timeEnd = Date.now();
         console.log("Taken ", timeEnd - timeStart);
+
+        updateFn({
+            speed: -1,
+            supInfos: this.MAX_CONCURRENT_CHUNK > 1 ? "Finalizing merge : " : undefined
+        })
+
+        await sleep(1000 + 100 * chunkInfo.chunkCount);
+        explorerWindowRefresh.set([job.windowUuid, Date.now()]);
     }
 
     private async uploadChunk(
@@ -131,14 +158,20 @@ class UploadQueue extends JobQueue<UploadJob> {
         chunk: Blob,
         currentChunkSize: number,
         chunkId: number,
+        multichunkConfig: any,
         updateFn: (value: Partial<UploadJob>) => void
     ): Promise<void> {
         try {
             await Http.upload_file_xhr(
-                job.dst,
-                job.file.name,
-                start,
                 chunk,
+                job.dst,
+                {
+                    filename: job.file.name,
+                    offset: start,
+                    chunkId: chunkId,
+                    chunkRangeMin: multichunkConfig?.min,
+                    chunkRangeMax: Math.min(multichunkConfig?.max, multichunkConfig?.min + this.MAX_CONCURRENT_CHUNK),
+                },
                 (uploaded) => {
                     this.onUploadProgress(job, chunkId, uploaded, currentChunkSize, updateFn);
                 }
@@ -150,7 +183,7 @@ class UploadQueue extends JobQueue<UploadJob> {
 
     public get asJobProgress(): any[] {
         return this.running.map(job => ({
-            title: getNameBeforeLastSlash(job.file.name),
+            title: (job.supInfos ?? "") + getNameBeforeLastSlash(job.file.name),
             subtitle: job.dst,
             progress: Math.round(job.progress ?? 0),
             speed: job.speed ?? -1,
@@ -163,4 +196,8 @@ class UploadQueue extends JobQueue<UploadJob> {
     }
 }
 
-export const uploadJobQueue = new UploadQueue();
+export let uploadJobQueue: UploadQueue;
+
+export function initUploadQueue() {
+    uploadJobQueue = new UploadQueue();
+}

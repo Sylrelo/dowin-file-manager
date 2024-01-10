@@ -1,4 +1,4 @@
-import { constants, mkdir, rmdir } from "fs/promises";
+import { access, constants, mkdir, rmdir } from "fs/promises";
 import { ReadDir } from "./read_dir";
 
 export async function createFolderIfNotExists(path: string) {
@@ -41,4 +41,13 @@ export async function rmEmptyDir(src: string): Promise<boolean> {
   }
 
   return hasError;
+}
+
+export async function FileExists(path: string): Promise<boolean> {
+  try {
+    await access(path);
+    return true;
+  } catch (_) {
+    return false;
+  }
 }

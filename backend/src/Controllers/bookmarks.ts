@@ -1,18 +1,10 @@
 import { FastifyInstance, RegisterOptions } from "fastify";
 import { AnonymousFunction } from "../types";
-import { access, statfs } from "fs/promises";
+import { statfs } from "fs/promises";
 import { ReadDir } from "../Services/read_dir";
 import { BOOKMARK_DB } from "../global";
 import { error } from "npmlog";
-
-async function FileExists(path: string): Promise<boolean> {
-  try {
-    await access(path);
-    return true;
-  } catch (_) {
-    return false;
-  }
-}
+import { FileExists } from "../Services/utils";
 
 async function AvailableSpace(path: string): Promise<Record<string, number>> {
   try {
