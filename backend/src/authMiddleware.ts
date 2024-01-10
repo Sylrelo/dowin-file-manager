@@ -1,7 +1,6 @@
 import fp from "fastify-plugin";
 import { Request } from "./types";
-import { SESSIONS, USER_DB } from "./global";
-import { PATH_PREFIX, SESSION_TIMEOUT } from "./entry";
+import { PATH_PREFIX, SESSIONS, SESSION_TIMEOUT, USER_DB } from "./global";
 import { Unauthorized } from "./errorHandler";
 import { error } from "npmlog";
 

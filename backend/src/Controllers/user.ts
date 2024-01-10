@@ -1,10 +1,9 @@
 import { FastifyInstance, FastifyRequest, RegisterOptions } from "fastify";
 import { AnonymousFunction, Request } from "../types";
-import { BANNED_IP_TIMEOUT, SESSIONS, USER_DB } from "../global";
+import { BANNED_IP_TIMEOUT, SESSIONS, SESSION_TIMEOUT, USER_DB } from "../global";
 import crypto from "crypto";
 import { User } from "../Database/userDb";
 import { BadRequest, Forbidden, TooManyRequest, Unauthorized } from "../errorHandler";
-import { SESSION_TIMEOUT } from "../entry";
 
 export default function (
   fastify: FastifyInstance,

@@ -1,3 +1,4 @@
 db_*.json
 dist/
 database/
+.tap
