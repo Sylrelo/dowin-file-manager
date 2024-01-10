@@ -10,13 +10,13 @@ interface ExplorerCtx {
 export class ExplorerWindow extends Window {
   ctx: ExplorerCtx;
 
-  constructor(uuid: string) {
+  constructor(uuid: string, path: string = "/") {
     super(uuid, "File-Explorer/Explorer", "File-Explorer/Toolbar")
 
     this.title = "Explorer"
     this.ticon = "folder"
     this.ctx = {
-      path: writable<string>("/"),
+      path: writable<string>(path),
       viewType: writable("LIST"),
       func: writable({})
     }

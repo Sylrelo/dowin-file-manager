@@ -37,9 +37,11 @@
     let currObj = tree;
 
     for (let i = 0; i < splitPath.length; i++) {
-      const p = splitPath[i];
+      let p = splitPath[i];
 
-      if (p === "") continue;
+      if (p === "") {
+        p = $path;
+      }
 
       if (currObj?.[p] == null) {
         currObj[p] = {
@@ -52,8 +54,6 @@
       } else {
         currObj = currObj[p];
         currObj._size += data.size;
-        // currObj._count += data.count;
-        // currObj._folderCount += data.folderCount;
       }
     }
   }
@@ -159,16 +159,6 @@
   {:else}
     <div class="container">
       <div class="per-folder">
-        <Line
-          tree={{
-            _size: data.totalSize,
-            _count: data.totalFile,
-            _folderCount: data.totalDirectory,
-          }}
-          path={$path}
-          totalSize={data.totalSize}
-        />
-
         {#each getTreeSubfolders(tree) as path}
           <Line tree={tree[path]} {path} totalSize={data.totalSize} deep={1} />
         {/each}

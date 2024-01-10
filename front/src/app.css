@@ -38,18 +38,13 @@
   --main-color-40: #1a1d27;
   --main-color-60: #12131a;
 
-  /* background-size: contain; */
   /* background-size: 14px 14px; */
-  background-color: rgb(60, 60, 60);
+  /* background-color: rgb(60, 60, 60); */
 
-  /* background: linear-gradient(
-    135deg,
-    rgba(63, 63, 63, 1),
-    #242424,
-    rgba(36, 36, 36, 1)
-  ); */
-
+  background-image: url("/resources/background-slim.jpg");
+  background-size: cover;
   background-position: center center;
+  /* background-color: rgb(255, 0, 255); */
 
   width: 100vw;
   height: 100vh;

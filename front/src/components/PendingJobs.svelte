@@ -23,32 +23,32 @@
   let runningJobs: Job[] = [];
   let pendingJobsCount: number = 0;
 
-  const test = [
-    {
-      progress: 10,
-      speed: 0,
-      subtitle: "Pellentesque fermentum lorem vitae auctor dictum.",
-      title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      type: "MV",
-      id: uuidv4(),
-    },
-    {
-      progress: 40,
-      speed: 0,
-      subtitle: "Pellentesque fermentum lorem vitae auctor dictum.",
-      title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      type: "CP",
-      id: uuidv4(),
-    },
-    {
-      progress: 80,
-      speed: 0,
-      subtitle: "Pellentesque fermentum lorem vitae auctor dictum.",
-      title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      type: "UP",
-      id: uuidv4(),
-    },
-  ];
+  // const test = [
+  // {
+  //   progress: 10,
+  //   speed: 0,
+  //   subtitle: "Pellentesque fermentum lorem vitae auctor dictum.",
+  //   title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  //   type: "MV",
+  //   id: uuidv4(),
+  // },
+  // {
+  //   progress: 40,
+  //   speed: 0,
+  //   subtitle: "Pellentesque fermentum lorem vitae auctor dictum.",
+  //   title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  //   type: "CP",
+  //   id: uuidv4(),
+  // },
+  // {
+  //   progress: 82,
+  //   speed: 0,
+  //   subtitle: "/",
+  //   title: "Test file",
+  //   type: "UP",
+  //   id: uuidv4(),
+  // },
+  // ];
 
   $: if ($uploadJobQueue || $fsJobQueue) {
     pendingJobsCount =

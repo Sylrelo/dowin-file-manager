@@ -15,6 +15,7 @@
   } from "../stores/global";
   import { Vec2 } from "../utilities/Vec2";
   import { FolderInfosWindow } from "../components/window/FolderInfos/FolderInfos";
+  import { ExplorerWindow } from "../components/window/File-Explorer/ExplorerWindow";
 
   let containerElement: HTMLElement;
 
@@ -127,6 +128,22 @@
     // const win2 = $windowsNew[1];
     // (win2 as FolderInfosWindow).ctx.path.set("/Users/slopez/Downloads/TO-NAS");
   }
+
+  function openNewWindow(): void {
+    if (fileTarget?.path == null) {
+      return;
+    }
+
+    const uuid = uuidv4();
+    activeWindow.set(uuid);
+
+    windowsNew.update((old) => [
+      ...old,
+      new ExplorerWindow(uuid, fileTarget!.path!),
+    ]);
+
+    isOpen = false;
+  }
 </script>
 
 {#if isOpen}
@@ -142,6 +159,10 @@
     </div>
 
     {#if fileTarget?.type === "Directory"}
+      <button class="btn" on:click={() => openNewWindow()}>
+        <TablerIcon icon="app-window" />
+        Open in new Window
+      </button>
       <button class="btn" on:click={() => openFolderInfos()}>
         <TablerIcon icon="chart-pie" />
         Dir stats
@@ -150,9 +171,10 @@
         <TablerIcon icon="pin" />
         Pin to leftbar
       </button>
+      <div style="margin-bottom: 12px;" />
     {/if}
 
-    <button class="btn" style="margin-top: 6px;" on:click={() => rename()}>
+    <button class="btn" on:click={() => rename()}>
       <TablerIcon icon="pencil" />
       Rename
     </button>
@@ -196,15 +218,14 @@
 
     font-size: 14px;
 
-    background-color: var(--main-color-0);
-    // background-color: #444;
-    // box-shadow: #444 0px 0px 30px 0px;
+    background-color: var(--main-color-1);
+    box-shadow: #00000055 2px 2px 10px 0px;
 
     padding: 4px;
     gap: 0px;
 
     border-radius: 6px;
-    border: 3px solid #444;
+    // border: 3px solid #444;
 
     width: 200px;
 
@@ -212,6 +233,8 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: auto;
+      border-radius: 0px;
+      border-bottom: 1px solid #666;
     }
 
     > div,

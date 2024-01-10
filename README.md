@@ -1,10 +1,14 @@
-# Pwan 
+# Dowin File Manager
 
-Pwan (Project Without A Name) is a web-based file and server manager written in Node and Svelte
+Dowin File Manager is a web-based file and server manager written in Node and Svelte
+
+## Screenshots
 
 ![screenshot](_git-resources/screen.png)
+![screenshot](_git-resources/screen-2.png)
 
 ## Current and planned features
+
 This list is non-exhaustive and will grow larger during the developpement
 
 - ✅ Multi-window file browsing
@@ -18,10 +22,10 @@ This list is non-exhaustive and will grow larger during the developpement
   - ✅ Firefox
   - ⚪ Chromium based browser (folders not working yet)
 - ⚪ User managing
-  - ⚪ Login
+  - ✅ Login
   - 🔴 Two Factor Authentication
-  - ⚪ Creation
-  - ⚪ Edition / Deletion
+  - ✅ Creation
+  - ✅ Edition / Deletion
 - ⚪ Compatibility
   - ⚪ MacOS
   - ⚪ Linux
@@ -44,26 +48,33 @@ This list is non-exhaustive and will grow larger during the developpement
   - 🔴 PostgreSQL ?
   - 🔴 SQLite ?
 
-|✅ - Done|⚪ - Partially done|🔵 - Working on it|🔴 - Not yet implemented|
-|---|---|---|---|
+| ✅ - Done | ⚪ - Partially done | 🔵 - Working on it | 🔴 - Not yet implemented |
+| --------- | ------------------- | ------------------ | ------------------------ |
 
-## Try it !
+## Try it with Docker !
 
-For now, if you want to try it you will need to build it from sources.
+```
+Placeholder docker
+```
+
+## Build it !
 
 ### Dependencies
 
-* NodeJS 19.0 min, 20.10 recommanded.
+- NodeJS 19.0 min, 20.10 recommended.
 
 ### Executing program
 
 #### Backend
+
 ```sh
 cd backend
 npm install
 npm run watch
 ```
+
 ### Front
+
 ```sh
 cd front
 npm install
