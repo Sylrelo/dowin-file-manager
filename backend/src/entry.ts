@@ -136,17 +136,6 @@ const SIGNALS = {
 
     info("Start", `Using "${PATH_PREFIX}" path prefix.`);
 
-    // let lastMem = 0;
-
-    // setInterval(() => {
-    //   const memUsage = process.memoryUsage();
-    //   const currentMem = Math.round(memUsage.rss / 1000 / 1000);
-    //   if (Math.abs(lastMem - currentMem) >= 10) {
-    //     log.info("Memory usage", currentMem + " Mb");
-    //     lastMem = currentMem;
-    //   }
-    // }, 1 * 1000);
-
     await fastify.listen({ port: 3000, host: "0.0.0.0" });
   } catch (err) {
     fastify.log.error(err);

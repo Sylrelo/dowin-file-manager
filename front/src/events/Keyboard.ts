@@ -1,17 +1,23 @@
+import { get, writable, type Writable } from "svelte/store";
 import { Vec2 } from "../utilities/Vec2";
 import CustomEventClass from "./_CustomEventClass";
 
-type KeyPressed = Record<string, boolean>
+type KeyPressed = Record<string, boolean> & { _lastPressedKey: string | null }
 
-class KeyEvent extends CustomEventClass<KeyPressed> {
+class KeyEvent extends CustomEventClass<KeyPressed, Writable<string | null>> {
   #initDone = false;
+  #timeout: any = null;
 
   constructor() {
     super()
-    this.update(() => ({}))
+    this.update(() => ({} as any))
+    this.data = writable(null);
   }
 
   private keyDown = (event: KeyboardEvent): void => {
+    const _lastPressedKey = get(this.data) !== event.key ? event.key : null
+    this.data.set(_lastPressedKey);
+
     this.update(old => ({
       ...old,
       [event.key]: true
@@ -21,45 +27,9 @@ class KeyEvent extends CustomEventClass<KeyPressed> {
   private keyUp = (event: KeyboardEvent): void => {
     this.update(old => ({
       ...old,
-      [event.key]: false
+      [event.key]: false,
     }))
   }
-
-  // private handleEvent = (event: MouseEvent, state: boolean): void => {
-  //     switch (event.button) {
-  //         case 0:
-  //             this.upd(event, "primary", state);
-  //             break;
-  //         case 1:
-  //             this.upd(event, "middle", state);
-  //             break;
-  //         case 2:
-  //             this.upd(event, "secondary", state);
-  //             break;
-  //         default:
-  //             break;
-  //     }
-  // }
-
-  // private upd(event: MouseEvent, key: string, state: boolean) {
-  //     let infos: Partial<MouseButton> = {
-  //         target: null,
-  //         position: new Vec2(-1, -1)
-  //     }
-
-  //     if (true == state) {
-  //         infos = {
-  //             target: event.target ? new MouseTarget(event.target as HTMLElement) : null,
-  //             position: new Vec2(event.x, event.y)
-  //         }
-  //     }
-
-  //     this.update(old => ({
-  //         ...old,
-  //         [key]: state,
-  //         ...infos,
-  //     }))
-  // }
 
   init() {
     if (true == this.#initDone)

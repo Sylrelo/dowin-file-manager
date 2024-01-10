@@ -1,11 +1,13 @@
 import type { Subscriber } from "svelte/motion";
 import { writable, type Updater, type Writable, get } from "svelte/store";
 
-class CustomEventClass<T> {
+class CustomEventClass<T, U = null> {
     private store: Writable<T>;
+    private optionnalData: U;
 
     constructor() {
         this.store = writable<T>();
+        this.optionnalData = null as U;
         console.log("CustomEventClass init.")
     }
 
@@ -15,6 +17,14 @@ class CustomEventClass<T> {
 
     public update(updater: Updater<T>) {
         this.store.update(updater)
+    }
+
+    public get data(): U {
+        return this.optionnalData;
+    }
+
+    public set data(data: U) {
+        this.optionnalData = data;
     }
 
     public get value(): T {

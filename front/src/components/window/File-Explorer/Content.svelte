@@ -10,6 +10,7 @@
 
   export let path: string = "";
   export let refresh: number = 0;
+  export let searchQuery: string = "";
 
   const dispatch = createEventDispatcher();
   const win = getContext<ExplorerWindow>("window-data");
@@ -22,7 +23,6 @@
     isLoading = true;
     resetWindowSelection(win.uuid);
     const result: FsContentBack[] = await Http.get("dir?q=" + inPath);
-    result.sort((a, b) => a.fileType - b.fileType);
 
     content = result.map((f) => {
       const indexExt = f.name.lastIndexOf(".");
@@ -33,6 +33,12 @@
         ext: indexExt !== -1 ? f.name.slice(indexExt + 1) : undefined,
       };
     });
+
+    content.sort(
+      (a, b) =>
+        +b.fileType.isDirectory - +a.fileType.isDirectory ||
+        a.name.localeCompare(b.name)
+    );
 
     isLoading = false;
   };
@@ -74,7 +80,14 @@
   {/if}
 
   {#each content as file (file.fullPath)}
-    <File on:file-click={() => onFileOpen(file)} {file} />
+    <!-- <div
+      style="width: 100%"
+      style:background-color={file.name.toLowerCase().includes(searchQuery)
+        ? "red"
+        : ""}
+    > -->
+    <File on:file-click={() => onFileOpen(file)} {file} {searchQuery} />
+    <!-- </div> -->
   {/each}
 
   {#if win.viewType === "LIST"}

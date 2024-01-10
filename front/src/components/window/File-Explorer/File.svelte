@@ -27,9 +27,14 @@
   } from "../../../stores/global";
   import { Http } from "../../../http";
 
-  export let file: FsContent;
+  /* -------------------------------- COMPONENT ------------------------------- */
 
+  export let file: FsContent;
+  export let searchQuery: string = "";
   export const win = getContext<ExplorerWindow>("window-data");
+
+  let _fileElement: HTMLElement;
+
   const { viewType } = win.ctx;
 
   const fileUuid = uuidv4();
@@ -62,11 +67,20 @@
 
     return icon;
   }
+
+  $: if (
+    _fileElement &&
+    searchQuery &&
+    file.name.toLowerCase().startsWith(searchQuery)
+  ) {
+    _fileElement.scrollIntoView();
+  }
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
+  bind:this={_fileElement}
   class="file"
   class:view-list={$viewType === "LIST"}
   class:selected={$selectedFilesPerWindow?.[win.uuid]?.find(
@@ -142,7 +156,13 @@
       />
     {:else}
       <div class="file-name">
-        {file.name}
+        {#if file.name.toLowerCase().startsWith(searchQuery)}
+          <b style=" text-decoration: underline;"
+            >{file.name.slice(0, searchQuery.length)}</b
+          >{file.name.slice(searchQuery.length)}
+        {:else}
+          {file.name}
+        {/if}
       </div>
     {/if}
 
@@ -298,6 +318,7 @@
 
       .file-name {
         text-align: left;
+        // display: flex;
       }
 
       > input {
