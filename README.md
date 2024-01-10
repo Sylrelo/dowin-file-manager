@@ -69,6 +69,7 @@ Tags :
 docker run \
 -p 3000:3000 \
 -v /Users/user/Downloads:/manager/downloads \
+-v ./database:/backend/database \
 sylrelo/dowin-file-manager:latest
 ```
 
@@ -80,13 +81,18 @@ services:
     image: sylrelo/dowin-file-manager:latest
     volumes:
       - /Users/:/manager/Users
+      - database:/backend/database
     environment:
       - FM_PATH_PREFIX=/
     ports:
       - 3000:3000
+volumes:
+  database:
 ```
 
 ℹ️ Volumes mounted inside /manager directory will automatically be visible in the leftbar.
+
+ℹ️ Don't forget to bind the database folder to keep your data.
 
 **⚠️ At first launch, a random password for the Admin account will be generated and printed in the console.**
 

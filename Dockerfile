@@ -28,7 +28,7 @@ COPY --from=builder /backend/package.json /backend/package.json
 COPY --from=builder /backend/package-lock.json /backend/package-lock.json
 
 
-WORKDIR /backend/dist
+WORKDIR /backend
 RUN npm install
 
 RUN pwd
@@ -36,4 +36,4 @@ RUN ls -l
 
 
 EXPOSE 3000
-CMD ["node", "entry.js"]
+CMD ["node", "dist/entry.js"]
