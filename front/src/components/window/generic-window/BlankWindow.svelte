@@ -36,7 +36,11 @@
   in:scale={{ duration: 150 }}
   out:fade={{ duration: 150 }}
 >
-  <div class="window-resize-zone"></div>
+  <div class="window-resize-zone">
+    <span>
+      <TablerIcon icon="arrow-down-right" />
+    </span>
+  </div>
   <div class="titlebar">
     <div class="title">
       <span>
@@ -101,6 +105,18 @@
       width: 32px;
       height: 32px;
       z-index: 100;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      > span {
+        position: relative;
+        top: -6px;
+        left: -6px;
+        opacity: 0.5;
+      }
+
       cursor: nwse-resize;
     }
 
