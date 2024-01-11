@@ -4,8 +4,6 @@ import { activeWindow, windowListTitleRefresh, windowsNew } from "../../stores/g
 
 interface WindowReactiveData {
   title: string,
-  zindex: number,
-  oldZindex: number,
 }
 
 export class Window {
@@ -18,8 +16,6 @@ export class Window {
 
   public reactiveData: Writable<WindowReactiveData> = writable({
     title: "",
-    zindex: 10,
-    oldZindex: 10,
   });
 
   public data = {
@@ -32,23 +28,13 @@ export class Window {
     this.uuid = uuid;
     this.component = component;
     this.toolbarComponent = toolbarComponent;
-
     let highestValue = 0;
 
     const windows = get(windowsNew);
-
-    console.log("Open", windows.length)
-    // if (windows.length === 0) {
-    //   this.data.zindex.set(10);
-    //   return;
-    // }
-
-    let a = 0;
     for (const window of windows) {
       highestValue = Math.max(0, get(window.data.zindex));
       this.data.zindex.set(highestValue + 10)
     };
-
   }
 
   protected updateZindex(value: number) {
@@ -69,8 +55,6 @@ export class Window {
 
     activeWindow.set(this.uuid)
   }
-
-
 
   public static new(uuid: string, component: string, toolbarComponent: string) {
     windowsNew.update(old => ([...old, new Window(uuid, component, toolbarComponent)]))
