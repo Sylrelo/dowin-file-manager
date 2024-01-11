@@ -11,7 +11,7 @@ on:
     workflows: ["Backend Test CI"]
     types:
       - completed
-  branches: ["release"]
+    branches: ["release"]
 
 jobs:
   build:
