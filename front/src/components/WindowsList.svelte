@@ -15,8 +15,6 @@
 
   const openWindow = () => {
     const uuid = uuidv4();
-    activeWindow.set(uuid);
-
     windowsNew.update((old) => [...old, new ExplorerWindow(uuid)]);
   };
 

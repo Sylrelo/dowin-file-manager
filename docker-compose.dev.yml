@@ -4,8 +4,8 @@ services:
   front:
     image: node:20-slim
     volumes:
-      - ./front:/front
-      - nm-front:/front/node_modules
+      - ./front:/front:cached
+      - /front/node_modules
     ports:
       - 8000:8000
     working_dir: /front
@@ -14,15 +14,14 @@ services:
   back:
     image: node:20-slim
     volumes:
-      - ./backend:/backend
+      - ./backend:/backend:cached
       - bdd:/backend/database
-      - nm-back:/backend/node_modules
+      - /backend/node_modules
+      - /Users/slopez/Downloads:/manager/Downloads
     ports:
       - 3000:3000
     working_dir: /backend
     command: bash -c "npm install && npm run watch"
 
 volumes:
-  nm-front:
-  nm-back:
   bdd:

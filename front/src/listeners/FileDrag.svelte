@@ -107,7 +107,12 @@
 
     const srcs = $selectedFilesPerWindow[winSrc.uuid];
 
-    fsJobQueue.addMultiple(winSrc.uuid, action as FsJobType, srcs, dstPath);
+    fsJobQueue.addMultiple(
+      targetOnRelease.window!.uuid!,
+      action as FsJobType,
+      srcs,
+      dstPath
+    );
   };
 
   const highlightDropzone = () => {

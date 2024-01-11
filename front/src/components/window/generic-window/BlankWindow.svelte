@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount, type ComponentType, type SvelteComponent } from "svelte";
-  import type { Window } from "../Window";
-  import { activeWindow } from "../../../stores/global";
   import { fade, scale } from "svelte/transition";
+  import { activeWindow } from "../../../stores/global";
   import TablerIcon from "../../Icons/TablerIcon.svelte";
+  import type { Window } from "../Window";
 
   export let win: Window;
 
@@ -11,7 +11,7 @@
   let toolbarComponent: ComponentType<SvelteComponent> | null = null;
 
   const loadComponent = async (
-    component: string,
+    component: string
   ): Promise<ComponentType<SvelteComponent>> => {
     const modules = import.meta.glob("../**/*.svelte");
     const module = await modules[`../${component}.svelte`]();
@@ -22,11 +22,13 @@
     component = await loadComponent(win.component);
     toolbarComponent = await loadComponent(win.toolbarComponent);
   });
+
+  const { zindex } = win.data;
 </script>
 
 <div
   class="window-container"
-  style:z-index={$activeWindow == win.uuid ? "5" : "1"}
+  style:z-index={$zindex}
   class:is-focused={$activeWindow == win.uuid}
   data-uuid={win.uuid}
   data-type={win.constructor.name}
@@ -43,6 +45,7 @@
         {/if}
       </span>
       <span>
+        {$zindex}
         {$win.title}
       </span>
     </div>
