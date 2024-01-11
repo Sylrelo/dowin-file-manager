@@ -3,6 +3,8 @@
   import ToolbarButton from "../generic-window/ToolbarButton.svelte";
   import type { ExplorerWindow } from "./ExplorerWindow";
   import { formatLongPath } from "./Utils";
+  import { Http } from "../../../http";
+  import { explorerWindowRefresh } from "../../../stores/global";
 
   export let win: ExplorerWindow;
 
@@ -95,16 +97,25 @@
   <div style="margin-left: auto; display: flex; gap: inherit;">
     <ToolbarButton
       ticon="folder-plus"
-      on:click={() => {
-        //TODO
-        alert("TODO");
+      on:click={async () => {
+        const result = await Http.post("fs", {
+          src: $path,
+          type: "folder",
+        });
+        $func.scrollToFilename(result.name.toLowerCase());
+
+        explorerWindowRefresh.set([win.uuid, Date.now()]);
       }}
     />
     <ToolbarButton
       ticon="file-plus"
-      on:click={() => {
-        //TODO
-        alert("TODO");
+      on:click={async () => {
+        const result = await Http.post("fs", {
+          src: $path,
+          type: "file",
+        });
+        $func.scrollToFilename(result.name.toLowerCase());
+        explorerWindowRefresh.set([win.uuid, Date.now()]);
       }}
     />
   </div>
