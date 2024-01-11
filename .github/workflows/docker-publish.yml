@@ -7,10 +7,15 @@ name: Docker
 
 on:
   workflow_dispatch:
-  push:
-    branches: ["release"]
-  pull_request:
-    branches: ["release"]
+  workflow_run:
+    workflows: ["Backend Test CI"]
+    types:
+      - completed
+
+  # push:
+  #   branches: ["release"]
+  # pull_request:
+  #   branches: ["release"]
 
 jobs:
   build:
