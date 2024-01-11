@@ -3,7 +3,13 @@ import { BookmarkDb } from "./Database/bookmarkDb";
 import { UserDb } from "./Database/userDb";
 import { FsProgress } from "./FsProgress";
 
-export const FS_PROGRESS = new FsProgress();
+
+/* --------------------------------- CONSTS --------------------------------- */
+
+export const PATH_PREFIX = process.env?.["FM_PATH_PREFIX"] ?? "/";
+export const SESSION_TIMEOUT = 1000 * 3600 * 12;
+
+/* -------------------------------- DATABASE -------------------------------- */
 
 export const USER_DB = new UserDb();
 export const BOOKMARK_DB = new BookmarkDb();
@@ -16,6 +22,7 @@ export interface UserSession {
   createdAt: number
 }
 
+export const FS_PROGRESS = new FsProgress();
 export const SESSIONS: { [key: string]: UserSession } = {};
 export const BANNED_IP_TIMEOUT: { [key: string]: any } = {};
 

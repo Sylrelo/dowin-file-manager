@@ -1,12 +1,12 @@
-import { stat, copyFile as fsCopyFile, constants, link, symlink } from "fs/promises";
-import { FsContent, ReadDir, getFileType } from "./read_dir";
 import { AsyncOptions, Options, ProgressData } from "copy-file";
-import { error } from "npmlog";
-import { createFolderIfNotExists } from "./utils";
 import { Dirent, Stats } from "fs";
+import { constants, copyFile as fsCopyFile, stat, symlink } from "fs/promises";
+import { error } from "npmlog";
 import path from "path";
-import { sleep } from "../global";
 import { Aborter } from "../Controllers/fs";
+import { sleep } from "../global";
+import { FsContent, ReadDir, getFileType } from "./read_dir";
+import { createFolderIfNotExists } from "./utils";
 
 let copyFile: (source: string, destination: string, options?: Options & AsyncOptions) => Promise<void>;
 
@@ -78,8 +78,6 @@ export async function FsCopy(srcPath: string, dstPath: string, options: CopyOpti
 
   const srcs: string[] = [];
 
-  const START_TIME = Date.now();
-
   if (srcMetadata.isDirectory()) {
     const basename = path.basename(srcPath);
     dstPath = path.join(dstPath, basename);
@@ -87,10 +85,9 @@ export async function FsCopy(srcPath: string, dstPath: string, options: CopyOpti
     srcs.push(srcPath);
 
     while (srcs.length > 0) {
-      if (opt.isCancelled)
+      if (opt.isCancelled?.aborted === true)
         break;
 
-      await sleep(5000);
       const currentDir = srcs.pop();
       const currentDstDir = currentDir.replace(srcPath, dstPath);
 
@@ -119,6 +116,4 @@ export async function FsCopy(srcPath: string, dstPath: string, options: CopyOpti
       path: srcPath,
     }, dstFilePath, opt);
   }
-
-  console.log(Date.now() - START_TIME + "ms");
 }

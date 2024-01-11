@@ -1,6 +1,7 @@
 import { mkdirSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { info } from "npmlog";
+import { ReadDir } from "../Services/read_dir";
 
 interface Share {
   uuid: string
