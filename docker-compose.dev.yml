@@ -1,0 +1,28 @@
+version: '3.0'
+
+services:
+  front:
+    image: node:20-slim
+    volumes:
+      - ./front:/front
+      - nm-front:/front/node_modules
+    ports:
+      - 8000:8000
+    working_dir: /front
+    command: bash -c "npm install && npm run dev"
+
+  back:
+    image: node:20-slim
+    volumes:
+      - ./backend:/backend
+      - bdd:/backend/database
+      - nm-back:/backend/node_modules
+    ports:
+      - 3000:3000
+    working_dir: /backend
+    command: bash -c "npm install && npm run watch"
+
+volumes:
+  nm-front:
+  nm-back:
+  bdd:
