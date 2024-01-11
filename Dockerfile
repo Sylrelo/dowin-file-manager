@@ -3,6 +3,8 @@ FROM alpine:latest as builder
 RUN apk add --update nodejs
 RUN apk add --update npm
 
+ENV CI=false
+
 WORKDIR /front
 COPY ./front /front
 RUN npm install
