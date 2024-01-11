@@ -15,7 +15,7 @@ env:
   NODE_ENV: TEST
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
