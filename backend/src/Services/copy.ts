@@ -78,8 +78,6 @@ export async function FsCopy(srcPath: string, dstPath: string, options: CopyOpti
 
   const srcs: string[] = [];
 
-  const START_TIME = Date.now();
-
   if (srcMetadata.isDirectory()) {
     const basename = path.basename(srcPath);
     dstPath = path.join(dstPath, basename);
@@ -87,10 +85,9 @@ export async function FsCopy(srcPath: string, dstPath: string, options: CopyOpti
     srcs.push(srcPath);
 
     while (srcs.length > 0) {
-      if (opt.isCancelled)
+      if (opt.isCancelled?.aborted === true)
         break;
 
-      await sleep(5000);
       const currentDir = srcs.pop();
       const currentDstDir = currentDir.replace(srcPath, dstPath);
 
@@ -119,6 +116,4 @@ export async function FsCopy(srcPath: string, dstPath: string, options: CopyOpti
       path: srcPath,
     }, dstFilePath, opt);
   }
-
-  console.log(Date.now() - START_TIME + "ms");
 }

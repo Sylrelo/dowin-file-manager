@@ -18,7 +18,7 @@ tap.test("Test Auth Middleware Enabled", async t => {
     method: "GET",
     url: "/"
   });
-  await sleep(2000);
+  await sleep(1000);
 
   await denyAccess(t, "/api/settings");
   await denyAccess(t, "/api/bookmarks");

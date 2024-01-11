@@ -57,7 +57,7 @@ export async function FsMove(srcPath: string, dstPath: string, options: MoveOpti
     const srcs: string[] = [srcPath];
 
     while (srcs.length > 0) {
-      if (opt.isCancelled)
+      if (opt.isCancelled?.aborted === true)
         break;
 
       const currentDir = srcs.pop();
