@@ -45,7 +45,6 @@
         {/if}
       </span>
       <span>
-        {$zindex}
         {$win.title}
       </span>
     </div>
@@ -53,19 +52,6 @@
       {#if toolbarComponent}
         <svelte:component this={toolbarComponent} {win}></svelte:component>
       {/if}
-      <!-- <div class="toolbar-button-item">
-        <TablerIcon icon="arrow-left" />
-      </div>
-      <div class="toolbar-button-item">
-        <TablerIcon icon="arrow-right" />
-      </div>
-      <div class="toolbar-button-item">
-        <TablerIcon icon="reload" />
-      </div>
-      <div class="toolbar-button-item">
-        <TablerIcon icon="home" />
-      </div> -->
-      <!-- <div class="toolbar-button-item">/users/slopez/desktop/pute</div> -->
     </div>
 
     <div class="buttons">
@@ -74,11 +60,9 @@
       </button>
     </div>
   </div>
-  <!-- <div class="content"> -->
   {#if component}
     <svelte:component this={component} {win}></svelte:component>
   {/if}
-  <!-- </div> -->
 </div>
 
 <style lang="scss">
@@ -88,10 +72,6 @@
 
     width: 800px;
     height: 500px;
-
-    // width: calc(100vw - 4px);
-    // min-height: calc(100vh - 70px);
-    // border: 1px solid blue;
 
     border-radius: 6px;
 
