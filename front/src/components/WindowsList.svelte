@@ -11,7 +11,6 @@
   import { ExplorerWindow } from "./window/File-Explorer/ExplorerWindow";
   import { getLastPath } from "./window/File-Explorer/Utils";
   import { SettingsWindow } from "./window/Settings/SettingWindow";
-  import { onMount } from "svelte";
   import { FolderInfosWindow } from "./window/FolderInfos/FolderInfos";
 
   const openWindow = () => {
