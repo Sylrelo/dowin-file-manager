@@ -9,6 +9,7 @@ import { AnonymousFunction, Request } from "../types";
 import { FsMove } from "../Services/move";
 import { BadRequest } from "../errorHandler";
 import { FsContent, ReadDir } from "../Services/read_dir";
+import { CreateEmptyFile, CreateEmptyFolder } from "../Services/create_filefolder";
 
 
 export class Aborter {
@@ -20,57 +21,17 @@ export class Aborter {
 }
 const CANCELLABLE: { [key: string]: Aborter } = {};
 
-//TODO: Move to a service
-function getNextName(current: FsContent[], startWith: string): string {
-  const existing = current.find(d => d.name.startsWith(startWith));
-  if (existing) {
-    const tmp = existing.name.slice(existing.name.lastIndexOf(" ") + 1);
-
-    if (tmp !== "file" && tmp !== "folder")
-      return startWith + " " + (+tmp + 1).toString();
-    else
-      return startWith + " " + "1";
-  }
-  return startWith;
-}
-
 export default function (fastify: FastifyInstance, _options: RegisterOptions, done: AnonymousFunction) {
-
-  //TODO: Move to a service
   fastify.post("/", async function (request, _response) {
     const { type, src } = request.body as any;
-
-    let startWith = "New folder";
-    if (type === "file") {
-      startWith = "New file";
-    }
-
-    let current = await ReadDir(src, { ignoreMetadata: true });
-    current = current.filter(d => d.name === startWith || d.name.startsWith(startWith + " "));
-    current.sort((a, b) => {
-      const aVal = a.name.slice(a.name.lastIndexOf(" ") + 1);
-      const bVal = b.name.slice(b.name.lastIndexOf(" ") + 1);
-      let compareResult = null;
-
-      if (Number(aVal) && Number(bVal)) {
-        compareResult = +bVal - +aVal;
-      }
-
-      return compareResult != null ? compareResult : b.name.localeCompare(a.name);
-    });
-
     let newName = "";
 
     if (type === "file") {
-      newName = getNextName(current, startWith);
-      await writeFile(
-        path.join(src, newName), ""
-      );
+      newName = await CreateEmptyFile(src);
     } else if (type === "folder") {
-      newName = getNextName(current, startWith);
-      await mkdir(path.join(src, newName));
+      newName = await CreateEmptyFolder(src);
     } else {
-      throw new BadRequest("Invalid input");
+      throw new BadRequest("Invalid type.");
     }
 
     return { name: newName };
