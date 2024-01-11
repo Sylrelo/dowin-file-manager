@@ -1,0 +1,34 @@
+name: Backend Test CI
+
+on:
+  push:
+    branches: ["release"]
+    paths:
+      - "backend/**"
+  pull_request:
+    branches: ["release"]
+    paths:
+      - "backend/**"
+
+env:
+  NODE_ENV: TEST
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        working-directory: backend/
+        with:
+          node-version: "20.x"
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Tests
+        run: npm run test

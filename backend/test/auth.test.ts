@@ -25,6 +25,7 @@ tap.test("Test Auth Middleware Enabled", async t => {
   await denyAccess(t, "/api/users");
   await denyAccess(t, "/api/dir");
 
+  t.teardown(() => fastifyServer.close());
 });
 
 

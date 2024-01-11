@@ -5,6 +5,7 @@ import { ReadDir } from "../src/Services/read_dir";
 import { authenticate } from "./_authenticate";
 import { makeRequest } from "./_utils";
 import { sleep } from "../src/global";
+import { fastifyServer } from "../src/fastify";
 
 const PREFIX = "./test-folders";
 
@@ -67,6 +68,8 @@ tap.test("Should Copy Files", async t => {
     copyFileResult.map(r => r.name).join(" "),
     ["test-file-1", "test-file-2"].join(" "),
   );
+
+  t.teardown(() => fastifyServer.close());
 });
 
 

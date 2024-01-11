@@ -8,7 +8,8 @@
     "build": "tsc -p ./tsconfig.json ",
     "lint": "eslint . --ext .ts",
     "watch": "tsc-watch --noClear -p ./tsconfig.json --onSuccess 'node ./dist/entry.js'",
-    "test": "tap test/*.test.ts"
+    "test": "NODE_ENV=TEST tap --disable-coverage --allow-incomplete-coverage --allow-empty-coverage -R terse run test/*.test.ts",
+    "coverage": "NODE_ENV=TEST tap test/*.test.ts"
   },
   "keywords": [],
   "author": "",
