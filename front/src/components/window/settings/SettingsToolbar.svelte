@@ -59,6 +59,21 @@
     </div>
   {/if}
 
+  {#if currentPath == "/file-upload"}
+    <div transition:fade={{ duration: 100 }}>
+      <div style="margin-left: auto;">
+        <ToolbarButton
+          label="Save"
+          ticon="device-floppy"
+          isDisabled={$isBusy}
+          on:click={() => {
+            $fn.save();
+          }}
+        />
+      </div>
+    </div>
+  {/if}
+
   <!-- /* -------------------------------------------------------------------------- */ -->
 
   {#if currentPath == "/mounts"}

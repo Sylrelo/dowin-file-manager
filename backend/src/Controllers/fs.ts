@@ -1,15 +1,14 @@
-import { FastifyInstance, RegisterOptions } from "fastify";
 import crypto from "crypto";
-import { FsCopy } from "../Services/copy";
-import { FS_PROGRESS } from "../global";
-import { ReadDirSize } from "../Services/read_dir_infos";
-import { mkdir, rename, rm, writeFile } from "fs/promises";
+import { FastifyInstance, RegisterOptions } from "fastify";
+import { rename, rm } from "fs/promises";
 import path from "path";
-import { AnonymousFunction, Request } from "../types";
-import { FsMove } from "../Services/move";
-import { BadRequest } from "../errorHandler";
-import { FsContent, ReadDir } from "../Services/read_dir";
+import { FsCopy } from "../Services/copy";
 import { CreateEmptyFile, CreateEmptyFolder } from "../Services/create_filefolder";
+import { FsMove } from "../Services/move";
+import { ReadDirSize } from "../Services/read_dir_infos";
+import { BadRequest } from "../errorHandler";
+import { FS_PROGRESS } from "../global";
+import { AnonymousFunction, Request } from "../types";
 
 
 export class Aborter {

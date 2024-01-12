@@ -11,14 +11,6 @@ export class BookmarkDb extends JsonDb<Bookmark[]> {
     }
   }
 
-  // async verifyJsonDb(): Promise<void> {
-  //   for (const entry of this.data) {
-  //     //
-  //   }
-
-  //   this.saveJsonDb();
-  // }
-
   get count() {
     return Object.keys(this.data).length;
   }

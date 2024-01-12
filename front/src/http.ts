@@ -134,7 +134,6 @@ export class Http {
             }
 
             xhr.send(frm);
-
         })
     }
 

@@ -18,14 +18,14 @@ import { PATH_PREFIX } from "./global";
 
 /* ------------------------------ INIT FASTIFY ------------------------------ */
 
-
 const fastify = Fastify({
-  logger: false
+  logger: false,
+  bodyLimit: 20 * 1000 * 1000,
 });
 
 fastify.register(fastifyMultipart, {
   limits: {
-    fileSize: 200 * 1000 * 1000
+    fileSize: 200 * 1000 * 1000,
   },
 });
 

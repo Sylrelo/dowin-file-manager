@@ -23,6 +23,11 @@
 
     "/mounts": { component: "./Settings/Mounts/List", title: "Mounts" },
     "/mounts/add": { component: "./Settings/Mounts/Add", title: "New Mount" },
+
+    "/file-upload": {
+      component: "./Settings/Settings/UploadSettings",
+      title: "Upload Settings",
+    },
   };
 
   $: if ($path) {
@@ -59,6 +64,15 @@
     />
 
     <div class="leftbar-separator" /> -->
+
+    <LeftbarItem
+      label="File upload"
+      ticon="upload"
+      active={$path == "/file-upload"}
+      on:click={() => path.set("/file-upload")}
+    />
+
+    <div class="leftbar-separator" />
 
     <LeftbarItem
       label="Users"

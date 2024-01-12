@@ -201,7 +201,7 @@
 <style lang="scss">
   .confirmation {
     position: absolute;
-    z-index: 200;
+    z-index: 90000;
 
     display: flex;
     flex-direction: column;
@@ -270,7 +270,7 @@
 
     overflow: hidden;
 
-    z-index: 150;
+    z-index: 90000;
 
     &.hidden {
       /* display: none; */

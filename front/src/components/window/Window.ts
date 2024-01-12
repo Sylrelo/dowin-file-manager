@@ -10,6 +10,7 @@ export class Window {
   [key: string]: any
   public uuid: string = "";
   public ticon: string = ""
+  public createdAt: number = Date.now();
 
   public component: string = ""
   public toolbarComponent: string = "";
@@ -33,7 +34,7 @@ export class Window {
     const windows = get(windowsNew);
     for (const window of windows) {
       highestValue = Math.max(0, get(window.data.zindex));
-      this.data.zindex.set(highestValue + 10)
+      this.data.zindex.set(highestValue + 2)
     };
   }
 
@@ -42,16 +43,17 @@ export class Window {
   }
 
   public setForeground() {
-    this.updateZindex(500);
+    // this.updateZindex(500);
 
     const windows = get(windowsNew);
-    windows.sort((a, b) => get(a.data.zindex) - get(b.data.zindex))
+    // windows.sort((a, b) => get(a.data.zindex) - get(b.data.zindex))
 
     let i = 0;
     for (const window of windows) {
       window.updateZindex(i);
       i++;
     }
+    this.updateZindex(500);
 
     activeWindow.set(this.uuid)
   }

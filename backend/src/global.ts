@@ -2,6 +2,7 @@ import { info } from "npmlog";
 import { BookmarkDb } from "./Database/bookmarkDb";
 import { UserDb } from "./Database/userDb";
 import { FsProgress } from "./FsProgress";
+import { SettingsDb } from "./Database/configDb";
 
 
 /* --------------------------------- CONSTS --------------------------------- */
@@ -12,6 +13,7 @@ export const SESSION_TIMEOUT = 1000 * 3600 * 12;
 /* -------------------------------- DATABASE -------------------------------- */
 
 export const USER_DB = new UserDb();
+export const SETTINGS_DB = new SettingsDb();
 export const BOOKMARK_DB = new BookmarkDb();
 
 

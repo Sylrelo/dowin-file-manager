@@ -209,7 +209,7 @@
 <style lang="scss">
   .right-click-container {
     position: absolute;
-    z-index: 200;
+    z-index: 90000;
 
     display: flex;
     flex-direction: column;

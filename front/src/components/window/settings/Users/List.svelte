@@ -2,13 +2,11 @@
   import { getContext, onMount } from "svelte";
   import { Http } from "../../../../http";
 
-  import TablerIcon from "../../../Icons/TablerIcon.svelte";
   import type { SettingsWindow } from "../SettingWindow";
   import type { User } from "../../../../interfaces";
 
   const win: SettingsWindow = getContext("win");
 
-  // const func: UserFn = $win.func;
   const { selected, isBusy, path, params } = win.context;
 
   /* -------------------------------------------------------------------------- */
