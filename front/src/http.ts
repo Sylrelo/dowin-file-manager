@@ -1,18 +1,18 @@
-import ky, { HTTPError, type KyResponse } from "ky"
+import ky, { type KyResponse } from "ky"
 import { currentUser } from "./stores/global";
 
 export class Http {
-    // static HOST = window.location.protocol + "//" + window.location.host + "/api/"
-    // static HOST = "http://localhost:8080/api"
+    static PATH_PREFIX = "";
 
     static HOST = (() => {
         const loc = window.location;
 
-
         if (loc.port === "8000")
             return "http://" + loc.hostname + ":3000/api/"
+        if (loc.port === "9000")
+            return "http://" + loc.hostname + ":4000/api/"
 
-        return window.location.protocol + "//" + window.location.host + "/api/"
+        return window.location.protocol + "//" + window.location.host + this.PATH_PREFIX + "/api/"
     })();
 
     static get HEADERS() {

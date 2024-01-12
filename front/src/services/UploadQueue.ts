@@ -13,6 +13,7 @@ interface UploadJob extends Job {
 
     speed?: number
     _lastReportTime?: number
+    _prevProgress?: number
 
     windowUuid: string
 
@@ -66,17 +67,28 @@ class UploadQueue extends JobQueue<UploadJob> {
 
         const totalProgress = progressPerChunk.reduce((prev, curr) => prev + curr, 0) / progressPerChunk.length;
 
-        const lastBytes = job.file.size * (job.progress! / 100);
-        const nowBytes = job.file.size * (totalProgress / 100);
-        const timeSinceLastReport = Date.now() - (job._lastReportTime ?? 0);
-        const diff = nowBytes - lastBytes;
-        const estimatedSpeed = (diff) * (1000 / timeSinceLastReport) / 8;
+        if (job._lastReportTime == null) {
+            job._lastReportTime = Date.now();
+            job._prevProgress = totalProgress;
+        }
+
+        if (Date.now() - job?._lastReportTime! >= 1000) {
+            const lastBytes = job.file.size * (job._prevProgress! / 100);
+            const nowBytes = job.file.size * (totalProgress / 100);
+            const diff = nowBytes - lastBytes;
+
+            job.speed = diff / 8;
+            console.log("Hey", diff / 8);
+            job._prevProgress = totalProgress;
+            job._lastReportTime = Date.now();
+        }
 
         updateFn({
             progressPerChunk,
             progress: totalProgress,
-            _lastReportTime: Date.now(),
-            speed: estimatedSpeed,
+            _lastReportTime: job._lastReportTime,
+            _prevProgress: job._prevProgress,
+            speed: job.speed,
         })
     }
 
@@ -143,12 +155,15 @@ class UploadQueue extends JobQueue<UploadJob> {
         let timeEnd = Date.now();
         console.log("Taken ", timeEnd - timeStart);
 
-        updateFn({
-            speed: -1,
-            supInfos: this.MAX_CONCURRENT_CHUNK > 1 ? "Finalizing merge : " : undefined
-        })
+        await sleep(1000);
+        if (!get(globalSettings).uploadSettings.tmpChunksInMemory && this.MAX_CONCURRENT_CHUNK > 1) {
+            updateFn({
+                speed: -1,
+                supInfos: this.MAX_CONCURRENT_CHUNK > 1 ? "Finalizing merge : " : undefined
+            })
+            await sleep(1000 + 100 * chunkInfo.chunkCount);
+        }
 
-        await sleep(1000 + 100 * chunkInfo.chunkCount);
         explorerWindowRefresh.set([job.windowUuid, Date.now()]);
     }
 
@@ -186,7 +201,7 @@ class UploadQueue extends JobQueue<UploadJob> {
             title: (job.supInfos ?? "") + getNameBeforeLastSlash(job.file.name),
             subtitle: job.dst,
             progress: Math.round(job.progress ?? 0),
-            speed: job.speed ?? -1,
+            speed: job.speed ?? 0,
             type: "UP",
             id: job._id,
             abort: () => {
