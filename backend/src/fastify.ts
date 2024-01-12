@@ -87,10 +87,17 @@ fastify.addHook("onSend", async function (req, rep, payload: any) {
           "assets/",
           prefix + "/assets/"
         );
+
         str = str.replaceAll(
           "/resources/",
           PATH_PREFIX + "/resources/"
         );
+
+        str = str.replaceAll(
+          "\"PATH_PREFIX\",\"\")",
+          `"PATH_PREFIX","${PATH_PREFIX}")`
+        );
+
       } else {
         str = str.replaceAll(
           "/assets/",
@@ -109,13 +116,12 @@ fastify.get(PATH_PREFIX, function (_, res) {
   return res.sendFile("index.html");
 });
 
-
-fastify.register(DirController, { prefix: "/api/dir" });
-fastify.register(FsController, { prefix: "/api/fs" });
-fastify.register(UploadController, { prefix: "/api/upload" });
-fastify.register(UserController, { prefix: "/api/users" });
-fastify.register(BookmarkController, { prefix: "/api/bookmarks" });
-fastify.register(SettingsController, { prefix: "/api/settings" });
+fastify.register(DirController, { prefix: path.join(PATH_PREFIX, "/api/dir") });
+fastify.register(FsController, { prefix: path.join(PATH_PREFIX, "/api/fs") });
+fastify.register(UploadController, { prefix: path.join(PATH_PREFIX, "/api/upload") });
+fastify.register(UserController, { prefix: path.join(PATH_PREFIX, "/api/users") });
+fastify.register(BookmarkController, { prefix: path.join(PATH_PREFIX, "/api/bookmarks") });
+fastify.register(SettingsController, { prefix: path.join(PATH_PREFIX, "/api/settings") });
 
 
 export { fastify as fastifyServer };
