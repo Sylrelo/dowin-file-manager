@@ -12,11 +12,10 @@
   import { getLastPath } from "./window/File-Explorer/Utils";
   import { SettingsWindow } from "./window/Settings/SettingWindow";
   import { FolderInfosWindow } from "./window/FolderInfos/FolderInfos";
+  import type { Window } from "./window/Window";
 
   const openWindow = () => {
     const uuid = uuidv4();
-    activeWindow.set(uuid);
-
     windowsNew.update((old) => [...old, new ExplorerWindow(uuid)]);
   };
 
@@ -26,6 +25,8 @@
 
     windowsNew.update((old) => [...old, new SettingsWindow(uuid)]);
   };
+
+  //
 </script>
 
 <div class="win-list">
@@ -44,11 +45,11 @@
       class="win"
       class:is-active={$activeWindow === window.uuid}
       on:click={() => {
+        window.setForeground();
         activeWindow.set(window.uuid);
       }}
     >
       <div class="icon"><TablerIcon icon={window.ticon} /></div>
-
       {#key $windowListTitleRefresh}
         <div class="name">
           {#if window instanceof FolderInfosWindow}
@@ -75,7 +76,7 @@
     flex-wrap: wrap;
     gap: 8px;
 
-    z-index: 200;
+    z-index: 90000;
 
     font-size: 0.85rem;
 

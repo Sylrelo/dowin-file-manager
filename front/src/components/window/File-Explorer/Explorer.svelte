@@ -8,6 +8,7 @@
   import {
     activeWindow,
     explorerWindowRefresh,
+    selectedForRename,
     windowListTitleRefresh,
   } from "../../../stores/global";
   import Mount from "./Mount.svelte";
@@ -20,7 +21,6 @@
 
   $: win && setContext("window-data", win);
 
-  // let currentPath = $path;
   let pathHistory = [get(path)];
   let currentHistoryPath = 0;
 
@@ -77,7 +77,11 @@
 
   let searchQuery = "";
   const _lastPressedKey = keyEvent.data;
-  $: if ($activeWindow === win.uuid && $_lastPressedKey) {
+  $: if (
+    $activeWindow === win.uuid &&
+    $_lastPressedKey &&
+    $selectedForRename === ""
+  ) {
     const key = $_lastPressedKey;
 
     if (key.length === 1) {
@@ -93,6 +97,10 @@
     win.setFn("historyChange", onHistoryClick);
     win.setFn("reload", function () {
       refresh = Date.now();
+    });
+
+    win.setFn("scrollToFilename", function (value: string) {
+      searchQuery = value;
     });
   });
 </script>

@@ -21,13 +21,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install NodeJS
-        working-directory: ./backend/
         uses: actions/setup-node@v3
         with:
           node-version: "20.x"
           cache: "npm"
           cache-dependency-path: backend/package-lock.json
-        
+
       - name: Install Dependencies
         working-directory: ./backend/
         run: npm ci

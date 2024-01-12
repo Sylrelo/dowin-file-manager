@@ -1,12 +1,14 @@
-import { FastifyInstance, RegisterOptions } from "fastify";
 import crypto from "crypto";
-import { FsCopy } from "../Services/copy";
-import { FS_PROGRESS } from "../global";
-import { ReadDirSize } from "../Services/read_dir_infos";
+import { FastifyInstance, RegisterOptions } from "fastify";
 import { rename, rm } from "fs/promises";
 import path from "path";
-import { AnonymousFunction, Request } from "../types";
+import { FsCopy } from "../Services/copy";
+import { CreateEmptyFile, CreateEmptyFolder } from "../Services/create_filefolder";
 import { FsMove } from "../Services/move";
+import { ReadDirSize } from "../Services/read_dir_infos";
+import { BadRequest } from "../errorHandler";
+import { FS_PROGRESS } from "../global";
+import { AnonymousFunction, Request } from "../types";
 
 
 export class Aborter {
@@ -19,6 +21,21 @@ export class Aborter {
 const CANCELLABLE: { [key: string]: Aborter } = {};
 
 export default function (fastify: FastifyInstance, _options: RegisterOptions, done: AnonymousFunction) {
+  fastify.post("/", async function (request, _response) {
+    const { type, src } = request.body as any;
+    let newName = "";
+
+    if (type === "file") {
+      newName = await CreateEmptyFile(src);
+    } else if (type === "folder") {
+      newName = await CreateEmptyFolder(src);
+    } else {
+      throw new BadRequest("Invalid type.");
+    }
+
+    return { name: newName };
+  });
+
 
   fastify.get("/infos", async function (request: Request, _response) {
     const dir = request.query["dir"];

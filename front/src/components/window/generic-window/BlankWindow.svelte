@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount, type ComponentType, type SvelteComponent } from "svelte";
-  import type { Window } from "../Window";
-  import { activeWindow } from "../../../stores/global";
   import { fade, scale } from "svelte/transition";
+  import { activeWindow } from "../../../stores/global";
   import TablerIcon from "../../Icons/TablerIcon.svelte";
+  import type { Window } from "../Window";
 
   export let win: Window;
 
@@ -11,7 +11,7 @@
   let toolbarComponent: ComponentType<SvelteComponent> | null = null;
 
   const loadComponent = async (
-    component: string,
+    component: string
   ): Promise<ComponentType<SvelteComponent>> => {
     const modules = import.meta.glob("../**/*.svelte");
     const module = await modules[`../${component}.svelte`]();
@@ -22,11 +22,13 @@
     component = await loadComponent(win.component);
     toolbarComponent = await loadComponent(win.toolbarComponent);
   });
+
+  const { zindex } = win.data;
 </script>
 
 <div
   class="window-container"
-  style:z-index={$activeWindow == win.uuid ? "5" : "1"}
+  style:z-index={$zindex}
   class:is-focused={$activeWindow == win.uuid}
   data-uuid={win.uuid}
   data-type={win.constructor.name}
@@ -34,7 +36,11 @@
   in:scale={{ duration: 150 }}
   out:fade={{ duration: 150 }}
 >
-  <div class="window-resize-zone"></div>
+  <div class="window-resize-zone">
+    <span>
+      <TablerIcon icon="arrow-down-right" />
+    </span>
+  </div>
   <div class="titlebar">
     <div class="title">
       <span>
@@ -50,19 +56,6 @@
       {#if toolbarComponent}
         <svelte:component this={toolbarComponent} {win}></svelte:component>
       {/if}
-      <!-- <div class="toolbar-button-item">
-        <TablerIcon icon="arrow-left" />
-      </div>
-      <div class="toolbar-button-item">
-        <TablerIcon icon="arrow-right" />
-      </div>
-      <div class="toolbar-button-item">
-        <TablerIcon icon="reload" />
-      </div>
-      <div class="toolbar-button-item">
-        <TablerIcon icon="home" />
-      </div> -->
-      <!-- <div class="toolbar-button-item">/users/slopez/desktop/pute</div> -->
     </div>
 
     <div class="buttons">
@@ -71,11 +64,9 @@
       </button>
     </div>
   </div>
-  <!-- <div class="content"> -->
   {#if component}
     <svelte:component this={component} {win}></svelte:component>
   {/if}
-  <!-- </div> -->
 </div>
 
 <style lang="scss">
@@ -85,10 +76,6 @@
 
     width: 800px;
     height: 500px;
-
-    // width: calc(100vw - 4px);
-    // min-height: calc(100vh - 70px);
-    // border: 1px solid blue;
 
     border-radius: 6px;
 
@@ -118,6 +105,18 @@
       width: 32px;
       height: 32px;
       z-index: 100;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      > span {
+        position: relative;
+        top: -6px;
+        left: -6px;
+        opacity: 0.5;
+      }
+
       cursor: nwse-resize;
     }
 

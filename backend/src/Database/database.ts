@@ -14,6 +14,7 @@ export interface UploadSetting {
   maxChunkSize: number
   maxConcurrentChunks: number
   maxConcurrentFileUpload: number
+  tmpChunksInMemory: boolean
 }
 
 export interface GlobalSetting {
@@ -25,7 +26,7 @@ export class JsonDb<T> {
   #timeoutSave: NodeJS.Timeout;
   #jsonPath: string = "";
 
-  constructor(jsonPath: string = "", init: any = undefined) {
+  constructor(jsonPath: string = "", init: T = undefined) {
     if (this.isJsonDatabase) {
       try {
         mkdirSync("database/");
@@ -46,11 +47,16 @@ export class JsonDb<T> {
     //
   }
 
+  onLoad() {
+    //
+  }
+
   async loadJsonDb(init: any) {
     try {
       const data = await readFile(this.#jsonPath,);
       this.data = JSON.parse(data.toString());
       this.verifyJsonDb();
+      this.onLoad();
       info("Database", `Loaded ${this.#jsonPath}.`);
     } catch (err) {
       if (err.code === "ENOENT") {
