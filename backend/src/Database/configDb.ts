@@ -23,6 +23,16 @@ export class SettingsDb extends JsonDb<GlobalSetting> {
     this.cachedSettings = this.data;
   }
 
+  async verifyJsonDb(): Promise<void> {
+    const uploadSettings = this.data.uploadSettings;
+
+    if (uploadSettings.tmpChunksInMemory != undefined)
+      delete uploadSettings.tmpChunksInMemory;
+
+    this.saveJsonDb();
+  }
+
+
   async update(settings: Partial<GlobalSetting>): Promise<GlobalSetting> {
     if (this.isJsonDatabase) {
 

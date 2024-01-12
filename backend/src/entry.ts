@@ -1,5 +1,5 @@
-import process from "process";
 import { info } from "npmlog";
+import process from "process";
 import { fastifyServer } from "./fastify";
 import { BANNED_IP_TIMEOUT, PATH_PREFIX, SESSIONS, SESSION_TIMEOUT } from "./global";
 
@@ -9,9 +9,9 @@ const SIGNALS = {
   "SIGTERM": 15
 };
 
+
 (async () => {
   try {
-
     Object.keys(SIGNALS).forEach((signal) => {
       process.on(signal, () => {
         console.log(`process received a ${signal} signal`);
