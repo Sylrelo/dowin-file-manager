@@ -1,9 +1,11 @@
 import { access, constants, mkdir, rmdir } from "fs/promises";
 import { ReadDir } from "./read_dir";
 
-export async function createFolderIfNotExists(path: string) {
+export async function createFolderIfNotExists(path: string, recursive: boolean = false) {
   try {
-    await mkdir(path);
+    await mkdir(path, {
+      recursive
+    });
   } catch (_error) {
     //
   }

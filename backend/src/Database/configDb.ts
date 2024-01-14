@@ -1,6 +1,5 @@
 import { GlobalSetting, JsonDb } from "./database";
 
-
 export class SettingsDb extends JsonDb<GlobalSetting> {
   cachedSettings: GlobalSetting = {} as GlobalSetting;
 
@@ -11,7 +10,8 @@ export class SettingsDb extends JsonDb<GlobalSetting> {
         maxConcurrentChunks: 1,
         maxConcurrentFileUpload: 4,
         tmpChunksInMemory: true,
-      }
+      },
+      enableTrashcan: true,
     });
 
     if (this.isJsonDatabase && this.data === undefined) {
@@ -29,7 +29,6 @@ export class SettingsDb extends JsonDb<GlobalSetting> {
       // Clean undefined key recursively
       settings = JSON.parse(JSON.stringify(settings));
 
-      console.log({ settings });
       this.data = {
         ...this.data,
         ...settings
