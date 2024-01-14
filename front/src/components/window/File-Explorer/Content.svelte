@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { createEventDispatcher, getContext, onMount } from "svelte";
-  import File from "./File.svelte";
+  import { createEventDispatcher, getContext } from "svelte";
   import { Http } from "../../../http";
+  import File from "./File.svelte";
 
-  import { resetWindowSelection } from "../../../stores/pathSelection";
-  import type { ExplorerWindow } from "./ExplorerWindow";
   import type { FsContent, FsContentBack } from "../../../interfaces";
+  import { resetWindowSelection } from "../../../stores/pathSelection";
   import { Filetype } from "../../../utilities/Filetype";
+  import type { ExplorerWindow } from "./ExplorerWindow";
 
   /* -------------------------------- COMPONENT ------------------------------- */
 
@@ -53,10 +53,6 @@
     }
 
     const currPath = file.fullPath;
-    // const currPath =
-    //     file.fullPath.length == 1 && file.fullPath[0] == "/"
-    //         ? file.fullPath + file.name
-    //         : file.fullPath + "/" + file.name;
 
     dispatch("onDirectoryChange", {
       name: file.name,

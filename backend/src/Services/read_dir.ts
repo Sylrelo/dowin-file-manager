@@ -122,9 +122,6 @@ export async function ReadDir(entryPath: string, customOptions: ReadDirOptions =
       _symlinkOriginalPath,
 
       fileType: getFileType(dirent, metadata?.mode),
-
-      // @ts-expect-error debug
-      _lnk: dirent.isDirectory() ? "http://localhost:3000/dir?q=" + fullPath : undefined,
       metadata
     });
   }

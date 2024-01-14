@@ -68,7 +68,10 @@
         src: fileTarget.path,
       });
 
-      explorerWindowRefresh.set([windowTargetUuid!, Date.now()]);
+      setTimeout(() => {
+        explorerWindowRefresh.set([windowTargetUuid!, Date.now()]);
+      }, 100);
+
       isOpen = false;
     } catch (_) {
       deleteConfirm = false;
@@ -129,6 +132,24 @@
     // (win2 as FolderInfosWindow).ctx.path.set("/Users/slopez/Downloads/TO-NAS");
   }
 
+  async function restoreTrashItem() {
+    try {
+      if (fileTarget?.path == null) {
+        return;
+      }
+
+      await Http.post("fs/trashcan/restore", {
+        src: fileTarget.path,
+      });
+
+      explorerWindowRefresh.set([windowTargetUuid!, Date.now()]);
+
+      isOpen = false;
+    } catch (_) {
+      //
+    }
+  }
+
   function openNewWindow(): void {
     if (fileTarget?.path == null) {
       return;
@@ -174,10 +195,19 @@
       <div style="margin-bottom: 12px;" />
     {/if}
 
-    <button class="btn" on:click={() => rename()}>
-      <TablerIcon icon="pencil" />
-      Rename
-    </button>
+    {#if !fileTarget?.path.includes(".dowin-trashcan")}
+      <button class="btn" on:click={() => rename()}>
+        <TablerIcon icon="pencil" />
+        Rename
+      </button>
+    {/if}
+
+    {#if fileTarget?.path.includes(".dowin-trashcan/")}
+      <button class="btn" on:click={() => restoreTrashItem()}>
+        <TablerIcon icon="recycle" />
+        Restore
+      </button>
+    {/if}
 
     {#if !deleteConfirm}
       <button

@@ -57,6 +57,8 @@
     let icon = "file-unknown";
     const isSymlink = content.fileType.isSymlink;
 
+    if (content.name === ".dowin-trashcan") return "trash";
+
     if (content.fileType.isDirectory) {
       icon = "folder-filled";
       if (isSymlink) icon = "folder-symlink";
@@ -82,6 +84,7 @@
 <div
   bind:this={_fileElement}
   class="file"
+  class:is-trashcan={file.name === ".dowin-trashcan"}
   class:view-list={$viewType === "LIST"}
   class:selected={$selectedFilesPerWindow?.[win.uuid]?.find(
     (s) => s.uuid === fileUuid
@@ -229,6 +232,13 @@
     border-radius: 5px;
 
     border: 2px solid #00000000;
+
+    &.is-trashcan {
+      color: rgb(242, 123, 123);
+      .icon {
+        color: rgb(242, 123, 123) !important;
+      }
+    }
 
     &.view-list {
       flex-direction: row;

@@ -86,7 +86,9 @@
         <span style:width="{job.progress}%" />
       </div>
       <div class="progress-percent">{job.progress}%</div>
-      <div class="progress-speed">{sizeFormatter(job.speed)} /s</div>
+      <div class="progress-speed">
+        {sizeFormatter(job.speed)} /s
+      </div>
 
       <div class="cancel">
         <button
@@ -138,7 +140,7 @@
 
     border-radius: 5px;
 
-    z-index: 100;
+    z-index: 99999;
 
     // border: 2px solid var(--main-color-10);
     // background-color: var(--main-color-3);

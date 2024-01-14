@@ -14,11 +14,6 @@ interface MoveOptions {
 }
 
 async function MoveFile(entry: FsContent, dstFilePath: string, options: MoveOptions): Promise<void> {
-  // if ((entry.fileType & constants.S_IFLNK) === constants.S_IFLNK) {
-  //   error("MoveFile", "File is a Symbolic Link", entry.name);
-  //   return;
-  // }
-
   try {
     await rename(entry.fullPath, dstFilePath);
     options.onProgress?.({
@@ -40,7 +35,11 @@ async function MoveFile(entry: FsContent, dstFilePath: string, options: MoveOpti
   }
 }
 
-export async function FsMove(srcPath: string, dstPath: string, options: MoveOptions = {}): Promise<void> {
+export async function FsMove(
+  srcPath: string,
+  dstPath: string,
+  options: MoveOptions = {}
+): Promise<void> {
   const opt: MoveOptions = {
     overwrite: true,
     onProgress: undefined,

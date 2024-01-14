@@ -7,7 +7,7 @@ services:
       - ./front:/front:cached
       - /front/node_modules
     ports:
-      - 8000:8000
+      - 9000:8000
     working_dir: /front
     command: bash -c "npm install && npm run dev"
 
@@ -17,9 +17,10 @@ services:
       - ./backend:/backend:cached
       - bdd:/backend/database
       - /backend/node_modules
-      - /Users/slopez/Downloads:/manager/Downloads
+      - ./test-dirs:/manager/Test
+      # - /Users/slopez/Downloads:/manager/Downloads
     ports:
-      - 3000:3000
+      - 4000:3000
     working_dir: /backend
     command: bash -c "npm install && npm run watch"
 

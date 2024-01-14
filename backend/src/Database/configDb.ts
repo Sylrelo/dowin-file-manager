@@ -1,6 +1,5 @@
 import { GlobalSetting, JsonDb } from "./database";
 
-
 export class SettingsDb extends JsonDb<GlobalSetting> {
   cachedSettings: GlobalSetting = {} as GlobalSetting;
 
@@ -11,7 +10,8 @@ export class SettingsDb extends JsonDb<GlobalSetting> {
         maxConcurrentChunks: 1,
         maxConcurrentFileUpload: 4,
         tmpChunksInMemory: true,
-      }
+      },
+      enableTrashcan: true,
     });
 
     if (this.isJsonDatabase && this.data === undefined) {
@@ -19,9 +19,23 @@ export class SettingsDb extends JsonDb<GlobalSetting> {
     }
   }
 
+
   onLoad(): void {
     this.cachedSettings = this.data;
   }
+
+  async verifyJsonDb(): Promise<void> {
+    const uploadSettings = this.data.uploadSettings;
+
+    if (uploadSettings.tmpChunksInMemory != undefined)
+      delete uploadSettings.tmpChunksInMemory;
+
+    if (this.data?.enableTrashcan == null)
+      this.data.enableTrashcan = true;
+
+    this.saveJsonDb();
+  }
+
 
   async update(settings: Partial<GlobalSetting>): Promise<GlobalSetting> {
     if (this.isJsonDatabase) {
@@ -29,7 +43,6 @@ export class SettingsDb extends JsonDb<GlobalSetting> {
       // Clean undefined key recursively
       settings = JSON.parse(JSON.stringify(settings));
 
-      console.log({ settings });
       this.data = {
         ...this.data,
         ...settings
