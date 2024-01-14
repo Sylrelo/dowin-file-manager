@@ -19,6 +19,7 @@ export interface UploadSetting {
 
 export interface GlobalSetting {
   uploadSettings: UploadSetting
+  enableTrashcan: boolean
 }
 
 export class JsonDb<T> {

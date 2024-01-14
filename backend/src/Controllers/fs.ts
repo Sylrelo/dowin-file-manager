@@ -9,6 +9,7 @@ import { ReadDirSize } from "../Services/read_dir_infos";
 import { BadRequest } from "../errorHandler";
 import { FS_PROGRESS } from "../global";
 import { AnonymousFunction, Request } from "../types";
+import { EmptyAllTrashcans, ListTrash, RestoreFromTrash, SendToTrash } from "../Services/trashcan";
 
 
 export class Aborter {
@@ -36,7 +37,6 @@ export default function (fastify: FastifyInstance, _options: RegisterOptions, do
     return { name: newName };
   });
 
-
   fastify.get("/infos", async function (request: Request, _response) {
     const dir = request.query["dir"];
     const detailled = request.query["detailled"];
@@ -46,11 +46,30 @@ export default function (fastify: FastifyInstance, _options: RegisterOptions, do
     });
   });
 
+  fastify.get("/trashcan", async function (_request, _response) {
+    return await ListTrash();
+  });
+
+  fastify.post("/trashcan/restore", async function (request, _response) {
+    const src: string = request.body["src"];
+
+    return await RestoreFromTrash(src);
+  });
+
+  fastify.post("/trashcan/empty", async function (_request, _response) {
+    return await EmptyAllTrashcans();
+  });
+
   fastify.post("/rm", async function (request, response) {
-    const src = request.body["src"];
+    const src: string = request.body["src"];
 
     if (src == null) {
       response.code(422);
+      return {};
+    }
+
+    if (src.startsWith("/manager") && !src.includes(".dowin-trashcan")) {
+      SendToTrash(src);
       return {};
     }
 

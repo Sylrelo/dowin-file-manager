@@ -38,7 +38,7 @@
   const highlightDragZone = () => {
     removeAllDragHighlight();
 
-    if ("DIR" === $mouseTarget.file?.type) {
+    if ("Directory" === $mouseTarget.file?.type) {
       const element = $mouseTarget.file?.element;
       element.classList.add("drag-highlight");
     } else if ($mouseTarget.content) {
@@ -128,7 +128,7 @@
 
     let destinationPath: string | undefined = undefined;
 
-    if ("DIR" === $mouseTarget.file?.type) {
+    if ("Directory" === $mouseTarget.file?.type) {
       destinationPath = $mouseTarget.file?.path;
     } else {
       destinationPath = $mouseTarget.content?.path;

@@ -66,17 +66,6 @@
         bind:value={settings.uploadSettings.maxConcurrentChunks}
       />
     </div>
-
-    <div class="d-flex">
-      <label for="enable-memory-tmp-chunks"
-        >Store temporary chunks in memory</label
-      >
-      <input
-        id="enable-memory-tmp-chunks"
-        type="checkbox"
-        bind:checked={settings.uploadSettings.tmpChunksInMemory}
-      />
-    </div>
   {/if}
 </div>
 
