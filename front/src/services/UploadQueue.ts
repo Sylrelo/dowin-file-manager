@@ -55,7 +55,7 @@ class UploadQueue extends JobQueue<UploadJob> {
 
         updateFn({ progressPerChunk: progressPerChunks });
 
-        const chunksLeft: number[] = (new Array(chunkInfo.chunkCount)).fill(0).map((_, i) => i);
+        const chunksLeft: number[] = (new Array(chunkInfo.chunkCount)).fill(0).map((_, i) => i).reverse();
         job.chunksLeft = chunksLeft;
 
         this.dispatchChunks(job, chunkInfo, updateFn);

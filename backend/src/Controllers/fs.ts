@@ -7,7 +7,7 @@ import { CreateEmptyFile, CreateEmptyFolder } from "../Services/create_filefolde
 import { FsMove } from "../Services/move";
 import { ReadDirSize } from "../Services/read_dir_infos";
 import { BadRequest } from "../errorHandler";
-import { FS_PROGRESS } from "../global";
+import { FS_PROGRESS, SETTINGS_DB } from "../global";
 import { AnonymousFunction, Request } from "../types";
 import { EmptyAllTrashcans, ListTrash, RestoreFromTrash, SendToTrash } from "../Services/trashcan";
 
@@ -47,28 +47,41 @@ export default function (fastify: FastifyInstance, _options: RegisterOptions, do
   });
 
   fastify.get("/trashcan", async function (_request, _response) {
+    const isTrashcanEnabled = SETTINGS_DB.cachedSettings?.enableTrashcan ?? true;
+    if (isTrashcanEnabled !== true)
+      throw new BadRequest("Trashcan not enabled.");
+
     return await ListTrash();
   });
 
   fastify.post("/trashcan/restore", async function (request, _response) {
+    const isTrashcanEnabled = SETTINGS_DB.cachedSettings?.enableTrashcan ?? true;
+    if (isTrashcanEnabled !== true)
+      throw new BadRequest("Trashcan not enabled.");
+
     const src: string = request.body["src"];
 
     return await RestoreFromTrash(src);
   });
 
   fastify.post("/trashcan/empty", async function (_request, _response) {
+    const isTrashcanEnabled = SETTINGS_DB.cachedSettings?.enableTrashcan ?? true;
+    if (isTrashcanEnabled !== true)
+      throw new BadRequest("Trashcan not enabled.");
+
     return await EmptyAllTrashcans();
   });
 
   fastify.post("/rm", async function (request, response) {
     const src: string = request.body["src"];
+    const isTrashcanEnabled = SETTINGS_DB.cachedSettings?.enableTrashcan ?? true;
 
     if (src == null) {
       response.code(422);
       return {};
     }
 
-    if (src.startsWith("/manager") && !src.includes(".dowin-trashcan")) {
+    if (isTrashcanEnabled && src.startsWith("/manager") && !src.includes(".dowin-trashcan")) {
       SendToTrash(src);
       return {};
     }

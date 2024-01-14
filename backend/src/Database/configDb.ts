@@ -19,6 +19,7 @@ export class SettingsDb extends JsonDb<GlobalSetting> {
     }
   }
 
+
   onLoad(): void {
     this.cachedSettings = this.data;
   }
@@ -28,6 +29,9 @@ export class SettingsDb extends JsonDb<GlobalSetting> {
 
     if (uploadSettings.tmpChunksInMemory != undefined)
       delete uploadSettings.tmpChunksInMemory;
+
+    if (this.data?.enableTrashcan == null)
+      this.data.enableTrashcan = true;
 
     this.saveJsonDb();
   }

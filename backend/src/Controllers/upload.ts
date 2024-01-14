@@ -8,6 +8,8 @@ import path from "path";
 import { Readable } from "stream";
 import { pipeline } from "stream/promises";
 import { SETTINGS_DB, sleep } from "../global";
+import { FileExists } from "../Services/utils";
+import { writeFile } from "fs/promises";
 
 interface FileUploadField {
   dst: MultipartValue<string>
@@ -42,7 +44,7 @@ async function idleMerge() {
       current.dstPath,
       {
         start: current.offset,
-        flags: "a",
+        flags: "r+",
       }
     );
 
@@ -61,6 +63,10 @@ async function handeMultichunksMemory(file: MultipartFile, fields: FileUploadFie
   const dst = fields.dst.value;
   const offset = +fields.offset.value;
   const dstPath = path.join(dst, filename);
+
+  if (!await FileExists(dstPath)) {
+    await writeFile(dstPath, "");
+  }
 
   CHUNKS_TO_MERGE.push({
     data: [await file.toBuffer()],
@@ -93,9 +99,14 @@ export default function (fastify: FastifyInstance, _options: RegisterOptions, do
 
     const dstPath = path.join(dst, filename);
 
+    if (!await FileExists(dstPath)) {
+      await writeFile(dstPath, "");
+    }
+
     await pipeline(file.file, createWriteStream(dstPath, {
       start: offset,
-      flags: "a",
+
+      flags: "r+",
     }));
 
     return {};
