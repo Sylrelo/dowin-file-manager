@@ -7,7 +7,7 @@ import { error } from "npmlog";
 import path from "path";
 import { Readable } from "stream";
 import { pipeline } from "stream/promises";
-import { SETTINGS_DB } from "../global";
+import { SETTINGS_DB, sleep } from "../global";
 
 interface FileUploadField {
   dst: MultipartValue<string>
@@ -17,17 +17,22 @@ interface FileUploadField {
   chunkRange?: MultipartValue<number>
 }
 
-//TODO: Better upload.
 const CHUNKS_TO_MERGE: any[] = [];
+let idleMergeStarted = false;
+let idleMergeInactiveSince: number | undefined = undefined;
 async function idleMerge() {
-  //Temporary
-  if (process.env["NODE_ENV"] === "TEST") return;
+  if (idleMergeInactiveSince === undefined && CHUNKS_TO_MERGE.length === 0)
+    idleMergeInactiveSince = Date.now();
 
   if (CHUNKS_TO_MERGE.length === 0) {
-    setTimeout(() => {
-      idleMerge();
-    }, 500);
-    return;
+    if (Date.now() - idleMergeInactiveSince >= 60000) {
+      idleMergeInactiveSince = undefined;
+      idleMergeStarted = false;
+      return;
+    }
+
+    await sleep(500);
+    return idleMerge();
   }
 
   const current = CHUNKS_TO_MERGE.pop();
@@ -51,12 +56,6 @@ async function idleMerge() {
   return idleMerge();
 }
 
-(() => {
-  idleMerge();
-})();
-
-// idleMerge();
-
 async function handeMultichunksMemory(file: MultipartFile, fields: FileUploadField) {
   const filename = fields.filename.value;
   const dst = fields.dst.value;
@@ -68,6 +67,12 @@ async function handeMultichunksMemory(file: MultipartFile, fields: FileUploadFie
     offset,
     dstPath
   });
+
+  if (idleMergeStarted === false) {
+    idleMergeStarted = true;
+    idleMergeInactiveSince = undefined;
+    idleMerge();
+  }
 }
 
 export default function (fastify: FastifyInstance, _options: RegisterOptions, done: AnonymousFunction) {
